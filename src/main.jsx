@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './styles/index.css'
 
-import { AuthProvider } from './contexts/AuthContext'
+import { AuthContext } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthProvider'
 import { BrowserRouter } from 'react-router-dom'
 
 import '@fontsource/roboto/300.css'
