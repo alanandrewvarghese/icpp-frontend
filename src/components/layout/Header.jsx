@@ -13,11 +13,11 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import CodeIcon from '@mui/icons-material/Code'
 
-const Header = ({ toggleTheme, darkMode, navLinks }) => {
+const Header = ({ navLinks }) => {
   const theme = useTheme()
-  const [anchorEl, setAnchorEl] = useState(null) // For mobile menu
-  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null) // For desktop dropdown menu
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false) // State to control desktop dropdown open/close
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const handleMobileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -29,11 +29,11 @@ const Header = ({ toggleTheme, darkMode, navLinks }) => {
 
   const handleDropdownOpen = (event) => {
     setDropdownAnchorEl(event.currentTarget)
-    setIsDropdownOpen(true) // Open dropdown on hover
+    setIsDropdownOpen(true)
   }
 
   const handleDropdownClose = () => {
-    setIsDropdownOpen(false) // Close dropdown
+    setIsDropdownOpen(false)
   }
 
   return (
@@ -72,8 +72,6 @@ const Header = ({ toggleTheme, darkMode, navLinks }) => {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
           {navLinks.map((link, index) => (
             <Box key={index} onMouseLeave={handleDropdownClose}>
-              {' '}
-              {/* Added onMouseLeave to the Box wrapper */}
               {link.subLinks ? (
                 <>
                   <Button
@@ -88,15 +86,14 @@ const Header = ({ toggleTheme, darkMode, navLinks }) => {
                     anchorEl={dropdownAnchorEl}
                     open={isDropdownOpen}
                     onClose={handleDropdownClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} // Keep anchor at bottom
-                    transformOrigin={{ vertical: 'top', horizontal: 'left' }} // Keep transform at top, for now
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                     MenuListProps={{
                       onMouseLeave: handleDropdownClose,
                     }}
                     PaperProps={{
-                      // Add PaperProps to style the dropdown's paper container
                       style: {
-                        marginTop: 5, // Add some margin at the top to push it down
+                        marginTop: 5,
                       },
                     }}
                   >

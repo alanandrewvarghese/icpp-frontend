@@ -11,27 +11,29 @@ const LoginPage = () => {
   const [successMessageVisible, setSuccessMessageVisible] = useState(registrationSuccess || false)
 
   return (
-    <Container maxWidth="sm">
-      <Collapse in={successMessageVisible}>
-        <Alert
-          severity="success"
-          sx={{ mb: 2 }}
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => setSuccessMessageVisible(false)}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          Registration successful! Please login with your credentials.
-        </Alert>
-      </Collapse>
-      <LoginForm />
-    </Container>
+    <>
+      <Container maxWidth="sm">
+        <Collapse in={successMessageVisible}>
+          <Alert
+            severity="success"
+            sx={{ mb: 2 }}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => setSuccessMessageVisible(false)}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            Registration successful! Please login with your credentials.
+          </Alert>
+        </Collapse>
+        <LoginForm />
+      </Container>
+    </>
   )
 }
 

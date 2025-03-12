@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 import {
   TextField,
@@ -29,8 +30,10 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const { loginContext } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
+    console.log('LoginForm.jsx - handleSubmit function started')
     event.preventDefault()
     setError('')
 
@@ -40,17 +43,21 @@ const LoginForm = () => {
     }
 
     try {
+      console.log('LoginForm.jsx - Calling loginContext with:', username, password)
       const response = await loginContext(username, password)
-      if (response?.token) {
-        // Redirect to homepage or desired route
-        console.log('Login successful')
+      console.log('LoginForm.jsx - Response from loginContext:', response)
+      if (response?.access) {
+        console.log('LoginForm.jsx - Login successful (token received)')
+        navigate('/')
       } else {
         setError('Invalid credentials. Please try again.')
+        console.log('LoginForm.jsx - Login failed - invalid credentials')
       }
     } catch (error) {
-      console.error(error)
+      console.error('LoginForm.jsx - Error during authentication:', error)
       setError('Authentication failed. Please try again later.')
     }
+    console.log('LoginForm.jsx - handleSubmit function finished')
   }
 
   const togglePasswordVisibility = () => {

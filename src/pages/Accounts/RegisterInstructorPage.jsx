@@ -4,9 +4,11 @@ import Container from '@mui/material/Container'
 
 const RegisterInstructorPage = () => {
   return (
-    <Container maxWidth="sm">
-      <RegistrationForm registrationType="instructor" />
-    </Container>
+    <>
+      <Container maxWidth="sm">
+        <RegistrationForm registrationType="instructor" />
+      </Container>
+    </>
   )
 }
 

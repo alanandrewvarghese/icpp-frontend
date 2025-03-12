@@ -211,7 +211,7 @@ const RegistrationForm = ({ registrationType = 'student' }) => {
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <Typography variant="body2" color="textSecondary">
-                Registering as {formTitle} ? Need to register as{' '}
+                Not {formTitle.split(' ')[0]} ? Register as{' '}
                 <Link href={registerAsLink} underline="hover">
                   {registerAsText}
                 </Link>
