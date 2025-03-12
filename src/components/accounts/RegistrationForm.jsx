@@ -194,8 +194,33 @@ const RegistrationForm = ({ registrationType = 'student' }) => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              error={error && password !== confirmPassword}
-              helperText={error && password !== confirmPassword ? 'Passwords must match' : ''}
+              error={error && (!confirmPassword || password !== confirmPassword)}
+              helperText={
+                error && !confirmPassword
+                  ? 'Confirm Password is required'
+                  : error && password !== confirmPassword
+                    ? 'Passwords must match'
+                    : ''
+              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockOutlinedIcon color="action" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={togglePasswordVisibility}
+                      edge="end"
+                      size="small"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
             <Button
