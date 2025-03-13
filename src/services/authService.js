@@ -129,3 +129,36 @@ export const changePasswordService = async (currentPassword, newPassword) => {
     return { success: false, error: errorMessage }
   }
 }
+
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}accounts/auth/password/reset/`,
+      { email },
+    )
+    return { success: true, data: response.data }
+  } catch (error) {
+    console.error('authService.js - Error requesting password reset:', error)
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to send password reset email.',
+    }
+  }
+}
+
+export const confirmPasswordReset = async (uidb64, token, newPassword, confirmNewPassword) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}accounts/auth/password/reset/confirm/${uidb64}/${token}/`,
+      { new_password: newPassword, confirm_new_password: confirmNewPassword },
+    )
+    return { success: true, data: response.data }
+  } catch (error) {
+    console.error('authService.js - Error confirming password reset:', error)
+    return {
+      success: false,
+      error:
+        error.response?.data?.error || 'Password reset failed. Please ensure the link is valid.',
+    }
+  }
+}

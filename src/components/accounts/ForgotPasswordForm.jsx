@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import apiClient from '../../services/apiClient'
+import { requestPasswordReset } from '../../services/authService'
 import {
   TextField,
   Button,
@@ -46,22 +46,17 @@ const ForgotPasswordForm = () => {
       return
     }
 
-    try {
-      const response = await apiClient.post('/accounts/auth/password/reset/', { email })
-      if (response.status === 200) {
-        setSuccessMessage('Success! A reset link will be sent if your email is in our system.')
-        setEmail('') // Clear the email field on success
-      } else {
-        setApiError('Failed to send password reset email. Please try again later.')
-      }
-    } catch (error) {
-      console.error('Password reset request failed:', error)
-      setApiError(
-        error.response?.data?.error || 'Failed to send password reset email. Please try again.',
-      )
-    } finally {
-      setLoading(false)
+    // Use the authService function instead of direct apiClient call
+    const result = await requestPasswordReset(email)
+
+    if (result.success) {
+      setSuccessMessage('Success! A reset link will be sent if your email is in our system.')
+      setEmail('') // Clear the email field on success
+    } else {
+      setApiError(result.error || 'Failed to send password reset email. Please try again.')
     }
+
+    setLoading(false)
   }
 
   return (

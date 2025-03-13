@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import apiClient from '../../services/apiClient'
+import { confirmPasswordReset } from '../../services/authService' // Import the auth service
 import {
   TextField,
   Button,
@@ -37,6 +37,8 @@ const ResetPasswordConfirmForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     setApiError('')
+    setPasswordError('')
+    setConfirmPasswordError('')
     setSuccessMessage('')
     setLoading(true)
 
@@ -63,29 +65,20 @@ const ResetPasswordConfirmForm = () => {
       return
     }
 
-    try {
-      const response = await apiClient.post(
-        `/accounts/auth/password/reset/confirm/${uidb64}/${token}/`,
-        { new_password: newPassword, confirm_new_password: confirmNewPassword },
-      )
-      if (response.status === 200) {
-        setSuccessMessage('Password reset successful. You can now login with your new password.')
-        // Optionally redirect to login page after successful reset
-        setTimeout(() => {
-          navigate('/login', { state: { passwordResetSuccess: true } })
-        }, 3000) // Redirect after 3 seconds
-      } else {
-        setApiError(response.data?.error || 'Password reset failed. Please try again.')
-      }
-    } catch (error) {
-      console.error('Password reset confirmation failed:', error)
-      setApiError(
-        error.response?.data?.error ||
-          'Password reset failed. Please ensure the link is valid and try again.',
-      )
-    } finally {
-      setLoading(false)
+    // Use the authService function instead of direct apiClient call
+    const result = await confirmPasswordReset(uidb64, token, newPassword, confirmNewPassword)
+
+    if (result.success) {
+      setSuccessMessage('Password reset successful. You can now login with your new password.')
+      // Optionally redirect to login page after successful reset
+      setTimeout(() => {
+        navigate('/login', { state: { passwordResetSuccess: true } })
+      }, 3000) // Redirect after 3 seconds
+    } else {
+      setApiError(result.error || 'Password reset failed. Please try again.')
     }
+
+    setLoading(false)
   }
 
   const togglePasswordVisibility = () => {
