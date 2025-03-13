@@ -8,6 +8,7 @@ import LogoutPage from './pages/Accounts/LogoutPage'
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { AuthContext } from './contexts/AuthContext'
+import PasswordChangePage from './pages/Accounts/PasswordChangePage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -34,6 +35,7 @@ function App() {
         ? [
             { text: 'Dashboard', url: '/student-dashboard' },
             { text: 'Logout', url: '/logout' },
+            { text: 'Change Password', url: '/password/change' },
           ]
         : []),
       ...(role === 'instructor'
@@ -46,6 +48,7 @@ function App() {
         ? [
             { text: 'Admin Panel', url: '/admin-dashboard' },
             { text: 'Logout', url: '/logout' },
+            { text: 'Change Password', url: '/password/change' },
           ]
         : []),
     ]
@@ -62,6 +65,7 @@ function App() {
         <Route path="/register/student" element={<RegisterStudentPage />} />{' '}
         <Route path="/register/instructor" element={<RegisterInstructorPage />} />{' '}
         <Route path="/logout" element={<LogoutPage />} />
+        <Route path="/password/change" element={<PasswordChangePage />} />
       </Routes>
       <Footer />
     </>
