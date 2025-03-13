@@ -9,56 +9,199 @@ import {
   Menu,
   MenuItem,
   useTheme,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Collapse,
+  Divider,
+  Container,
+  Tooltip,
+  alpha,
 } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
 import CodeIcon from '@mui/icons-material/Code'
+import MenuIcon from '@mui/icons-material/Menu'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import ExpandLess from '@mui/icons-material/ExpandLess'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import { Link as RouterLink } from 'react-router-dom'
 
 const Header = ({ navLinks }) => {
   const theme = useTheme()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  const [expandedItems, setExpandedItems] = useState({})
+  const [anchorEls, setAnchorEls] = useState({})
 
-  const handleMobileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget)
+  // Toggle mobile drawer
+  const toggleMobileDrawer = () => {
+    setMobileDrawerOpen(!mobileDrawerOpen)
   }
 
-  const handleMobileMenuClose = () => {
-    setAnchorEl(null)
+  // Handle dropdown menu for desktop
+  const handleMenuOpen = (index, event) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: event.currentTarget,
+    }))
   }
 
-  const handleDropdownOpen = (event) => {
-    setDropdownAnchorEl(event.currentTarget)
-    setIsDropdownOpen(true)
+  const handleMenuClose = (index) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: null,
+    }))
   }
 
-  const handleDropdownClose = () => {
-    setIsDropdownOpen(false)
+  // Toggle expanded items in mobile drawer
+  const toggleExpanded = (index) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }))
   }
 
-  return (
-    <AppBar
-      position="fixed"
-      elevation={1}
-      sx={{
-        background: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        zIndex: theme.zIndex.drawer + 1,
+  // Render desktop navigation
+  const renderDesktopNav = () => (
+    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1, ml: 'auto' }}>
+      {navLinks.map((link, index) => (
+        <Box key={index} sx={{ position: 'relative' }}>
+          {link.subLinks ? (
+            <>
+              <Tooltip>
+                <Button
+                  aria-controls={`menu-${index}`}
+                  aria-haspopup="true"
+                  onClick={(e) => handleMenuOpen(index, e)}
+                  endIcon={<KeyboardArrowDownIcon />}
+                  sx={{
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1,
+                    fontWeight: 500,
+                    color: theme.palette.primary.dark,
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                    },
+                  }}
+                >
+                  {link.text}
+                </Button>
+              </Tooltip>
+              <Menu
+                id={`menu-${index}`}
+                anchorEl={anchorEls[index]}
+                open={Boolean(anchorEls[index])}
+                onClose={() => handleMenuClose(index)}
+                MenuListProps={{
+                  'aria-labelledby': `button-${index}`,
+                }}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                PaperProps={{
+                  elevation: 3,
+                  sx: {
+                    mt: 1.5,
+                    borderRadius: 0.5,
+                    minWidth: 180,
+                    overflow: 'visible',
+                    '&:before': {
+                      display: 'block',
+                      position: 'absolute',
+                      top: 0,
+                      left: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: 'background.paper',
+                      transform: 'translateY(-50%) rotate(45deg)',
+                      zIndex: 0,
+                    },
+                  },
+                }}
+              >
+                {link.subLinks.map((subLink, subIndex) => (
+                  <MenuItem
+                    key={subIndex}
+                    component={RouterLink}
+                    to={subLink.url}
+                    onClick={() => handleMenuClose(index)}
+                    sx={{
+                      borderRadius: 1,
+                      mx: 1,
+                      my: 0.5,
+                      py: 1,
+                      color: theme.palette.primary.main,
+                      transition: 'all 0.2s',
+                      '&:hover': {
+                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                      },
+                    }}
+                  >
+                    <Typography variant="body2">{subLink.text}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          ) : (
+            <Button
+              component={RouterLink}
+              to={link.url}
+              sx={{
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                fontWeight: 500,
+                color: theme.palette.primary.dark,
+                transition: 'all 0.2s',
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                },
+              }}
+            >
+              {link.text}
+            </Button>
+          )}
+        </Box>
+      ))}
+    </Box>
+  )
+
+  // Render mobile drawer content
+  const renderMobileDrawer = () => (
+    <Drawer
+      anchor="right"
+      open={mobileDrawerOpen}
+      onClose={toggleMobileDrawer}
+      PaperProps={{
+        sx: {
+          width: '80%',
+          maxWidth: 300,
+          borderTopLeftRadius: 8,
+          borderBottomLeftRadius: 8,
+        },
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* Logo and Brand */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton edge="start" color="inherit" aria-label="logo" sx={{ mr: 1 }}>
-            <CodeIcon color="primary" />
-          </IconButton>
+      <Box sx={{ py: 2, px: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            p: 2,
+            mb: 1,
+          }}
+        >
+          <CodeIcon color="primary" sx={{ mr: 1, fontSize: 28 }} />
           <Typography
             variant="h6"
-            component="div"
             sx={{
               fontWeight: 600,
-              letterSpacing: 0.5,
               background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -68,90 +211,126 @@ const Header = ({ navLinks }) => {
           </Typography>
         </Box>
 
-        {/* Desktop Navigation with Dropdown */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+        <Divider sx={{ mb: 2 }} />
+
+        <List component="nav" sx={{ width: '100%' }}>
           {navLinks.map((link, index) => (
-            <Box key={index} onMouseLeave={handleDropdownClose}>
+            <React.Fragment key={index}>
               {link.subLinks ? (
                 <>
-                  <Button
-                    color="inherit"
-                    onMouseEnter={handleDropdownOpen}
-                    aria-haspopup="true"
-                    aria-expanded={isDropdownOpen}
-                  >
-                    {link.text}
-                  </Button>
-                  <Menu
-                    anchorEl={dropdownAnchorEl}
-                    open={isDropdownOpen}
-                    onClose={handleDropdownClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                    MenuListProps={{
-                      onMouseLeave: handleDropdownClose,
-                    }}
-                    PaperProps={{
-                      style: {
-                        marginTop: 5,
-                      },
-                    }}
-                  >
-                    {link.subLinks.map((subLink, subIndex) => (
-                      <MenuItem
-                        key={subIndex}
-                        onClick={handleDropdownClose}
-                        component="a"
-                        href={subLink.url}
-                      >
-                        {subLink.text}
-                      </MenuItem>
-                    ))}
-                  </Menu>
+                  <ListItemButton onClick={() => toggleExpanded(index)}>
+                    <ListItemText
+                      primary={link.text}
+                      primaryTypographyProps={{ fontWeight: 'medium' }}
+                    />
+                    {expandedItems[index] ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={expandedItems[index]} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {link.subLinks.map((subLink, subIndex) => (
+                        <ListItemButton
+                          key={subIndex}
+                          component={RouterLink}
+                          to={subLink.url}
+                          onClick={toggleMobileDrawer}
+                          sx={{ pl: 4 }}
+                        >
+                          <ListItemText
+                            primary={subLink.text}
+                            primaryTypographyProps={{ variant: 'body2' }}
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Collapse>
                 </>
               ) : (
-                <Button color="inherit" href={link.url}>
-                  {link.text}
-                </Button>
+                <ListItemButton component={RouterLink} to={link.url} onClick={toggleMobileDrawer}>
+                  <ListItemText
+                    primary={link.text}
+                    primaryTypographyProps={{ fontWeight: 'medium' }}
+                  />
+                </ListItemButton>
               )}
-            </Box>
+            </React.Fragment>
           ))}
-        </Box>
+        </List>
+      </Box>
+    </Drawer>
+  )
 
-        {/* Mobile Navigation Button */}
-        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-          <IconButton color="inherit" aria-label="menu" onClick={handleMobileMenuOpen}>
-            <MenuIcon />
-          </IconButton>
-        </Box>
+  return (
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        backgroundColor: alpha(theme.palette.background.paper, 0.95),
+        backdropFilter: 'blur(8px)',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        color: theme.palette.text.primary,
+      }}
+    >
+      <Container maxWidth="xl">
+        <Toolbar disableGutters sx={{ py: 1 }}>
+          {/* Logo and Brand */}
+          <Box
+            component={RouterLink}
+            to="/"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexGrow: { xs: 1, md: 0 },
+              mr: { md: 2 },
+              textDecoration: 'none',
+            }}
+          >
+            <CodeIcon
+              color="primary"
+              sx={{
+                mr: 1,
+                fontSize: { xs: 28, md: 32 },
+                transition: 'transform 0.2s',
+                '&:hover': { transform: 'rotate(10deg)' },
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                letterSpacing: 0.5,
+                background: theme.palette.primary.dark,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              PyInteract
+            </Typography>
+          </Box>
 
-        {/* Mobile Menu */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleMobileMenuClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          {navLinks.map((link, index) => (
-            <Box key={index}>
-              <MenuItem disabled={!!link.subLinks}>{link.text}</MenuItem>
-              {link.subLinks &&
-                link.subLinks.map((subLink, subIndex) => (
-                  <MenuItem
-                    key={subIndex}
-                    onClick={handleMobileMenuClose}
-                    component="a"
-                    href={subLink.url}
-                    sx={{ pl: 4 }}
-                  >
-                    {subLink.text}
-                  </MenuItem>
-                ))}
-            </Box>
-          ))}
-        </Menu>
-      </Toolbar>
+          {/* Desktop Navigation */}
+          {renderDesktopNav()}
+
+          {/* Mobile Menu Button */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'flex-end' }}>
+            <IconButton
+              size="large"
+              color="primary"
+              aria-label="open menu"
+              onClick={toggleMobileDrawer}
+              sx={{
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                borderRadius: 2,
+                p: 1,
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+
+          {/* Mobile Drawer */}
+          {renderMobileDrawer()}
+        </Toolbar>
+      </Container>
     </AppBar>
   )
 }

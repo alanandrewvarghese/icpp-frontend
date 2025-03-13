@@ -16,44 +16,73 @@ function App() {
 
   useEffect(() => {
     const role = user?.role || 'guest'
+    const isLoggedIn = role !== 'guest'
 
-    const links = [
-      ...(role === 'guest'
-        ? [
-            { text: 'Home', url: '/' },
-            { text: 'Login', url: '/login' },
-            {
-              text: 'Register',
-              subLinks: [
-                { text: 'Student', url: '/register/student' },
-                { text: 'Instructor', url: '/register/instructor' },
-              ],
-            },
-          ]
-        : []),
+    // Common links for all users
+    const commonLinks = []
+
+    // Main navigation links based on role
+    const roleSpecificLinks = [
       ...(role === 'student'
         ? [
-            { text: 'Dashboard', url: '/student-dashboard' },
-            { text: 'Logout', url: '/logout' },
-            { text: 'Change Password', url: '/password/change' },
+            { text: 'Sample Link', url: '/' },
+            { text: 'Sample Link', url: '/' },
           ]
         : []),
+
       ...(role === 'instructor'
         ? [
-            { text: 'Instructor Panel', url: '/instructor-dashboard' },
-            { text: 'Logout', url: '/logout' },
+            { text: 'Sample Link', url: '/' },
+            { text: 'Sample Link', url: '/' },
+            { text: 'Sample Link', url: '/' },
           ]
         : []),
+
       ...(role === 'admin'
         ? [
-            { text: 'Admin Panel', url: '/admin-dashboard' },
-            { text: 'Logout', url: '/logout' },
-            { text: 'Change Password', url: '/password/change' },
+            { text: 'Sample Link', url: '/' },
+            { text: 'Sample Link', url: '/' },
+            { text: 'Sample Link', url: '/' },
           ]
         : []),
     ]
 
-    setNavLinks(links)
+    // // Resources dropdown for all users
+    // const resourcesDropdown = {
+    //   text: 'Resources',
+    //   subLinks: [
+    //     { text: 'Documentation', url: '/resources/docs' },
+    //     { text: 'Tutorials', url: '/resources/tutorials' },
+    //     { text: 'FAQ', url: '/resources/faq' },
+    //   ],
+    // }
+
+    // Authentication links
+    const authLinks = isLoggedIn
+      ? [
+          {
+            text: 'Account',
+            subLinks: [
+              { text: 'Sample Sub Link', url: `/` },
+              { text: 'Sample Sub Link', url: '/' },
+              { text: 'Change Password', url: '/password/change' },
+              { text: 'Logout', url: '/logout' },
+            ],
+          },
+        ]
+      : [
+          { text: 'Login', url: '/login' },
+          {
+            text: 'Register',
+            subLinks: [
+              { text: 'Student', url: '/register/student' },
+              { text: 'Instructor', url: '/register/instructor' },
+            ],
+          },
+        ]
+
+    // Combine all links, Add if needed: resourcesDropdown,
+    setNavLinks([...commonLinks, ...roleSpecificLinks, ...authLinks])
   }, [user])
   return (
     <>
