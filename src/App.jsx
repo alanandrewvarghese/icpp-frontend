@@ -9,6 +9,8 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import { AuthContext } from './contexts/AuthContext'
 import PasswordChangePage from './pages/Accounts/PasswordChangePage'
+import ForgotPasswordPage from './pages/Accounts/ForgotPasswordPage'
+import ResetPasswordConfirmPage from './pages/Accounts/ResetPasswordConfirmPage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -95,6 +97,8 @@ function App() {
         <Route path="/register/instructor" element={<RegisterInstructorPage />} />{' '}
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/password/change" element={<PasswordChangePage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordConfirmPage />} />
       </Routes>
       <Footer />
     </>

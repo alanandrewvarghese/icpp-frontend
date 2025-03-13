@@ -1,16 +1,16 @@
 import React from 'react'
-import PasswordChangeForm from '../../components/accounts/PasswordChangeForm'
+import ResetPasswordConfirmForm from '../../components/accounts/ResetPasswordConfirmForm'
 import Container from '@mui/material/Container'
 import MarginTop from '../../components/layout/MarginTop'
 
-const PasswordChangePage = () => {
+const ResetPasswordConfirmPage = () => {
   return (
     <>
       <Container maxWidth="sm">
-        <PasswordChangeForm />
+        <ResetPasswordConfirmForm />
       </Container>
     </>
   )
 }
 
-export default PasswordChangePage
+export default ResetPasswordConfirmPage
