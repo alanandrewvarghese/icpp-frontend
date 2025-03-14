@@ -1,8 +1,9 @@
 import React from 'react'
-import { Box, Typography, Paper, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Typography, Paper } from '@mui/material'
+import ExerciseList from '../../../exercises/ExerciseList'
 
 const ExercisesTab = ({ lesson, theme }) => {
-  if (!lesson || !lesson.exercises || lesson.exercises.length === 0) {
+  if (!lesson || !lesson.id) {
     return (
       <Typography variant="body1" color="text.secondary">
         No exercises available for this lesson.
@@ -11,20 +12,12 @@ const ExercisesTab = ({ lesson, theme }) => {
   }
 
   return (
-    <Paper sx={{ p: 3, borderRadius: 2 }} elevation={0} variant="outlined">
+    <Paper sx={{ p: 3, borderRadius: 1 }} elevation={0} variant="outlined">
       <Typography variant="h5" component="h2" sx={{ mb: 3, fontWeight: 500 }}>
         Exercises
       </Typography>
-      <List>
-        {lesson.exercises.map((exercise, index) => (
-          <ListItem key={index} sx={{ mb: 2, p: 0 }}>
-            <ListItemText
-              primary={`Exercise ${index + 1}: ${exercise.title}`}
-              secondary={exercise.description}
-            />
-          </ListItem>
-        ))}
-      </List>
+      {/* Pass the lesson ID to ExerciseList */}
+      <ExerciseList lessonId={lesson.id} />
     </Paper>
   )
 }

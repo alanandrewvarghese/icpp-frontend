@@ -9,7 +9,7 @@ import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 const ContentTab = ({ lesson, theme }) => {
   return (
-    <Paper sx={{ p: 3, borderRadius: 2 }} elevation={0} variant="outlined">
+    <Paper sx={{ p: 3, borderRadius: 1 }} elevation={0} variant="outlined">
       <Typography variant="h5" component="h2" sx={{ mt: 0, mb: 3, fontWeight: 500 }}>
         Introduction
       </Typography>
