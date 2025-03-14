@@ -13,8 +13,56 @@ import CodeIcon from '@mui/icons-material/Code'
 import SchoolIcon from '@mui/icons-material/School'
 import GroupIcon from '@mui/icons-material/Group'
 import Divider from '@mui/material/Divider'
+import AuthCheck from '../components/AuthCheck'
 
 const HomePage = () => {
+  const unAuthenticatedOptions = (
+    <>
+      <Grid item>
+        <Button
+          variant="contained"
+          color="secondary"
+          component={RouterLink}
+          to="/register/student"
+          size="large"
+          sx={{
+            px: 4,
+            py: 1,
+            fontWeight: 'bold',
+            backgroundColor: 'white',
+            color: (theme) => theme.palette.primary.main,
+            '&:hover': {
+              backgroundColor: '#f0f0f0',
+            },
+          }}
+        >
+          Register
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="outlined"
+          component={RouterLink}
+          to="/login"
+          size="large"
+          sx={{
+            px: 4,
+            py: 1,
+            fontWeight: 'bold',
+            color: 'white',
+            borderColor: 'white',
+            '&:hover': {
+              borderColor: 'white',
+              backgroundColor: 'rgba(255,255,255,0.1)',
+            },
+          }}
+        >
+          Login
+        </Button>
+      </Grid>
+    </>
+  )
+
   return (
     <>
       <Box sx={{ minHeight: '100vh' }}>
@@ -36,48 +84,32 @@ const HomePage = () => {
               Your interactive platform for learning Python programming
             </Typography>
             <Grid container spacing={3} justifyContent="center">
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  component={RouterLink}
-                  to="/register/student"
-                  size="large"
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    fontWeight: 'bold',
-                    backgroundColor: 'white',
-                    color: (theme) => theme.palette.primary.main,
-                    '&:hover': {
-                      backgroundColor: '#f0f0f0',
-                    },
-                  }}
-                >
-                  Register
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  component={RouterLink}
-                  to="/login"
-                  size="large"
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    fontWeight: 'bold',
-                    color: 'white',
-                    borderColor: 'white',
-                    '&:hover': {
-                      borderColor: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    },
-                  }}
-                >
-                  Login
-                </Button>
-              </Grid>
+              <AuthCheck
+                allowedRoles={['student']}
+                unauthenticatedFallback={unAuthenticatedOptions}
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={RouterLink}
+                    to="/lessons"
+                    size="large"
+                    sx={{
+                      px: 4,
+                      py: 1,
+                      fontWeight: 'bold',
+                      backgroundColor: 'white',
+                      color: (theme) => theme.palette.primary.main,
+                      '&:hover': {
+                        backgroundColor: '#f0f0f0',
+                      },
+                    }}
+                  >
+                    Go To Lessons
+                  </Button>
+                </Grid>
+              </AuthCheck>
             </Grid>
           </Container>
         </Box>

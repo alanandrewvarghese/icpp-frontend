@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { AuthContext } from './contexts/AuthContext'
+
+import Header from './components/layout/Header'
+import Footer from './components/layout/Footer'
+import HomePage from './pages/HomePage'
+
 import LoginPage from './pages/Accounts/LoginPage'
 import RegisterStudentPage from './pages/Accounts/RegisterStudentPage'
 import RegisterInstructorPage from './pages/Accounts/RegisterInstructorPage'
-import HomePage from './pages/HomePage'
 import LogoutPage from './pages/Accounts/LogoutPage'
-import Header from './components/layout/Header'
-import Footer from './components/layout/Footer'
-import { AuthContext } from './contexts/AuthContext'
 import PasswordChangePage from './pages/Accounts/PasswordChangePage'
 import ForgotPasswordPage from './pages/Accounts/ForgotPasswordPage'
 import ResetPasswordConfirmPage from './pages/Accounts/ResetPasswordConfirmPage'
+
+import LessonListPage from './pages/Lessons/LessonListPage'
+import LessonDetailPage from './pages/Lessons/LessonDetailPage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -27,7 +32,7 @@ function App() {
     const roleSpecificLinks = [
       ...(role === 'student'
         ? [
-            { text: 'Sample Link', url: '/' },
+            { text: 'Lessons', url: '/lessons' },
             { text: 'Sample Link', url: '/' },
           ]
         : []),
@@ -36,13 +41,11 @@ function App() {
         ? [
             { text: 'Sample Link', url: '/' },
             { text: 'Sample Link', url: '/' },
-            { text: 'Sample Link', url: '/' },
           ]
         : []),
 
       ...(role === 'admin'
         ? [
-            { text: 'Sample Link', url: '/' },
             { text: 'Sample Link', url: '/' },
             { text: 'Sample Link', url: '/' },
           ]
@@ -65,8 +68,6 @@ function App() {
           {
             text: 'Account',
             subLinks: [
-              { text: 'Sample Sub Link', url: `/` },
-              { text: 'Sample Sub Link', url: '/' },
               { text: 'Change Password', url: '/password/change' },
               { text: 'Logout', url: '/logout' },
             ],
@@ -99,6 +100,8 @@ function App() {
         <Route path="/password/change" element={<PasswordChangePage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordConfirmPage />} />
+        <Route path="/lessons" element={<LessonListPage />} />
+        <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
       </Routes>
       <Footer />
     </>
