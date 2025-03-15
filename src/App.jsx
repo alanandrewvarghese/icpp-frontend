@@ -16,6 +16,7 @@ import ResetPasswordConfirmPage from './pages/Accounts/ResetPasswordConfirmPage'
 
 import LessonListPage from './pages/Lessons/LessonListPage'
 import LessonDetailPage from './pages/Lessons/LessonDetailPage'
+import ExercisePage from './pages/Exercises/ExercisePage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -102,6 +103,7 @@ function App() {
         <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordConfirmPage />} />
         <Route path="/lessons" element={<LessonListPage />} />
         <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
+        <Route path="/exercises/:exerciseId" element={<ExercisePage />} />
       </Routes>
       <Footer />
     </>

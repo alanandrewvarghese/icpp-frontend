@@ -56,6 +56,17 @@ const LessonDetailPage = () => {
     }
   }, [lessonId])
 
+  useEffect(() => {
+    // Check if there's a tab query parameter
+    const queryParams = new URLSearchParams(window.location.search)
+    const tab = queryParams.get('tab')
+
+    // If tab parameter is 'exercises', set the tab value to 1 (Exercises tab)
+    if (tab === 'exercises') {
+      setTabValue(1)
+    }
+  }, [])
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue)
   }

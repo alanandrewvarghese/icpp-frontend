@@ -58,6 +58,12 @@ npm install -D tailwindcss@3 postcss autoprefixer
 npm install react-markdown remark-gfm rehype-raw react-syntax-highlighter
 ```
 
+# React-Confetti
+
+```bash
+npm install react-confetti
+```
+
 # Monaco Editor
 
 ```bash
