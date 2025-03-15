@@ -16,6 +16,7 @@ import {
 } from '@mui/material'
 import { Code as CodeIcon, KeyboardArrowRight as ArrowIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import toTitleCase from '../../utils/toTitleCase'
 
 const ExerciseList = ({ lessonId }) => {
   const [exercises, setExercises] = useState([])
@@ -135,7 +136,7 @@ const ExerciseList = ({ lessonId }) => {
                   }
                   secondary={
                     <Typography variant="body2" color="text.secondary">
-                      {exercise.description}
+                      Author: {toTitleCase(exercise.author_name)}
                     </Typography>
                   }
                 />

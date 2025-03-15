@@ -1,7 +1,7 @@
 import React from 'react'
 
-const PaddingTop = ({ pt }) => {
-  return <div style={{ paddingTop: pt }}></div>
+const MarginTop = ({ mt }) => {
+  return <div style={{ marginTop: mt }}></div>
 }
 
-export default PaddingTop
+export default MarginTop

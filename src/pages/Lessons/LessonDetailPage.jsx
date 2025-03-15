@@ -105,7 +105,7 @@ const LessonDetailPage = () => {
 
   return (
     <Container maxWidth="lg">
-      <MarginTop />
+      <MarginTop mt="64px" />
 
       <LessonBreadcrumbs lesson={lesson} />
 

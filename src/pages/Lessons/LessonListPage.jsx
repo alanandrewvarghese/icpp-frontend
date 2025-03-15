@@ -6,7 +6,7 @@ import { Container, Typography, Box, Divider } from '@mui/material'
 const LessonListPage = () => {
   return (
     <Container maxWidth="md" className="h-screen">
-      <MarginTop />
+      <MarginTop mt="64px" />
       <Box sx={{ mb: 4 }}>
         <Typography variant="h5" component="h2" sx={{ pt: 3, mb: 3, fontWeight: 500 }}>
           Available Lessons

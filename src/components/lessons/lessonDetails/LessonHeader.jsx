@@ -7,14 +7,7 @@ import {
   BookmarkBorder as BookmarkOutlineIcon,
 } from '@mui/icons-material'
 import { alpha } from '@mui/material/styles'
-
-const toTitleCase = (str) => {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
+import toTitleCase from '../../../utils/toTitleCase'
 
 const LessonHeader = ({ lesson, bookmarked, handleBookmark, theme }) => {
   return (
