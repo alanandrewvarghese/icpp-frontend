@@ -20,6 +20,7 @@ import CodeIcon from '@mui/icons-material/Code'
 import InputIcon from '@mui/icons-material/Input'
 import OutputIcon from '@mui/icons-material/Output'
 import ReactMarkdown from 'react-markdown'
+import TestCasesDisplay from './TestCasesDisplay'
 
 const ExerciseDetail = ({ exerciseId }) => {
   const [exercise, setExercise] = useState(null)
@@ -59,107 +60,8 @@ const ExerciseDetail = ({ exerciseId }) => {
     return <Alert severity="error">{error || 'Exercise not found'}</Alert>
   }
 
-  // Helper to render test cases in a user-friendly way
   const renderTestCases = () => {
-    if (!exercise.test_cases || !exercise.test_cases.length) {
-      return (
-        <Box sx={{ py: 2, textAlign: 'center' }}>
-          <Typography color="text.secondary">No test cases available</Typography>
-        </Box>
-      )
-    }
-
-    return (
-      <List sx={{ width: '100%', p: 0 }}>
-        {exercise.test_cases.map((test, index) => (
-          <Paper
-            key={index}
-            variant="outlined"
-            sx={{
-              mb: index < exercise.test_cases.length - 1 ? 2 : 0,
-              borderRadius: 1,
-              overflow: 'hidden',
-            }}
-          >
-            <ListItem sx={{ px: 2, py: 1.5 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2" fontWeight="500">
-                    Test Case {index + 1}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mr: 1.5,
-                        p: 1,
-                        borderRadius: 1,
-                        bgcolor: alpha(theme.palette.info.main, 0.1),
-                      }}
-                    >
-                      <InputIcon color="info" fontSize="small" />
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        Input
-                      </Typography>
-                      <Paper
-                        variant="outlined"
-                        sx={{
-                          p: 1,
-                          mt: 0.5,
-                          bgcolor: alpha(theme.palette.grey[900], 0.02),
-                          fontSize: '0.9rem',
-                          fontFamily: 'monospace',
-                        }}
-                      >
-                        {test.input || ''}
-                      </Paper>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mr: 1.5,
-                        p: 1,
-                        borderRadius: 1,
-                        bgcolor: alpha(theme.palette.success.main, 0.1),
-                      }}
-                    >
-                      <OutputIcon color="success" fontSize="small" />
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" color="text.secondary" display="block">
-                        Expected Output
-                      </Typography>
-                      <Paper
-                        variant="outlined"
-                        sx={{
-                          p: 1,
-                          mt: 0.5,
-                          bgcolor: alpha(theme.palette.grey[900], 0.02),
-                          fontSize: '0.9rem',
-                          fontFamily: 'monospace',
-                        }}
-                      >
-                        {test.expected_output || ''}
-                      </Paper>
-                    </Box>
-                  </Box>
-                </Grid>
-              </Grid>
-            </ListItem>
-          </Paper>
-        ))}
-      </List>
-    )
+    return <TestCasesDisplay testCases={exercise.test_cases} />
   }
 
   return (
@@ -216,40 +118,12 @@ const ExerciseDetail = ({ exerciseId }) => {
         </ReactMarkdown>
       </Box>
 
-      {/* <Box sx={{ mb: 3 }}>
-        <Typography variant="subtitle1" fontWeight="500" gutterBottom>
-          Starter Code
-        </Typography>
-        <Paper
-          variant="outlined"
-          sx={{
-            borderRadius: 1,
-            overflow: 'hidden',
-            bgcolor: alpha(theme.palette.grey[900], 0.03),
-          }}
-        >
-          <SyntaxHighlighter
-            language="python"
-            style={tomorrow}
-            customStyle={{
-              margin: 0,
-              borderRadius: 4,
-              fontSize: '0.9rem',
-            }}
-          >
-            {exercise.starter_code || '# No starter code provided'}
-          </SyntaxHighlighter>
-        </Paper>
-      </Box> */}
-
       <Box>
         <Typography variant="subtitle1" fontWeight="500" gutterBottom>
           Test Cases
         </Typography>
         {renderTestCases()}
       </Box>
-
-      {/* Editor and submission components would go here */}
     </Paper>
   )
 }

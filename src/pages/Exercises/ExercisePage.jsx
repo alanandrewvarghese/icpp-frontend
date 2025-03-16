@@ -23,6 +23,7 @@ const ExercisePage = () => {
   const [isOutputError, setIsOutputError] = useState(false)
   const [redirectCountdown, setRedirectCountdown] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [testResults, setTestResults] = useState([])
 
   useEffect(() => {
     const loadExercise = async () => {
@@ -59,6 +60,7 @@ const ExercisePage = () => {
       // If API returns execution ID for polling
       if (executionResponse.id) {
         const result = await sandboxService.pollExecutionResults(executionResponse.request)
+        setTestResults(result.test_results)
 
         // Check for errors in execution
         if (result.error) {
@@ -180,8 +182,8 @@ const ExercisePage = () => {
           zIndex: 2,
         }}
       >
-        <MarginTop />
-        <PaddingTop pt="60px" />
+        <MarginTop mt="64px" />
+
         <Grid container spacing={1} sx={{ flex: 1, overflow: 'hidden' }}>
           <Grid item xs={12} md={6} sx={{ height: '100%' }}>
             <Paper
@@ -230,7 +232,8 @@ const ExercisePage = () => {
                     output={output}
                     onClear={clearOutput}
                     error={isOutputError}
-                    title="Execution Output"
+                    title=">>"
+                    testResults={testResults}
                   />
                 </Box>
               </Box>
