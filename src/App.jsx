@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AuthContext } from './contexts/AuthContext'
+import ProtectedRoute from './components/common/ProtectedRoute'
 
 import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
@@ -16,6 +17,7 @@ import ResetPasswordConfirmPage from './pages/Accounts/ResetPasswordConfirmPage'
 
 import LessonListPage from './pages/Lessons/LessonListPage'
 import LessonDetailPage from './pages/Lessons/LessonDetailPage'
+import CreateLessonPage from './pages/Lessons/CreateLessonPage'
 import ExercisePage from './pages/Exercises/ExercisePage'
 
 function App() {
@@ -23,48 +25,40 @@ function App() {
   const { user } = useContext(AuthContext)
 
   useEffect(() => {
-    const role = user?.role || 'guest'
-    const isLoggedIn = role !== 'guest'
+    const isAuthenticated = user?.role && user.role !== 'guest'
+    const hasRole = (roles = []) => roles.length === 0 || (user?.role && roles.includes(user.role))
 
-    // Common links for all users
     const commonLinks = []
 
-    // Main navigation links based on role
-    const roleSpecificLinks = [
-      ...(role === 'student'
+    const studentLinks =
+      isAuthenticated && hasRole(['student'])
         ? [
             { text: 'Lessons', url: '/lessons' },
-            { text: 'Sample Link', url: '/' },
+            // Other student-specific links
           ]
-        : []),
+        : []
 
-      ...(role === 'instructor'
+    const instructorLinks =
+      isAuthenticated && hasRole(['instructor'])
         ? [
-            { text: 'Sample Link', url: '/' },
-            { text: 'Sample Link', url: '/' },
+            { text: 'Create Lesson', url: '/lessons/create' },
+            { text: 'Lessons', url: '/lessons' },
+            // Other instructor-specific links
           ]
-        : []),
+        : []
 
-      ...(role === 'admin'
+    const adminLinks =
+      isAuthenticated && hasRole(['admin'])
         ? [
-            { text: 'Sample Link', url: '/' },
-            { text: 'Sample Link', url: '/' },
+            { text: 'Create Lesson', url: '/create/lesson' },
+            { text: 'Lessons', url: '/lessons' },
+            // Admin-specific links
           ]
-        : []),
-    ]
+        : []
 
-    // // Resources dropdown for all users
-    // const resourcesDropdown = {
-    //   text: 'Resources',
-    //   subLinks: [
-    //     { text: 'Documentation', url: '/resources/docs' },
-    //     { text: 'Tutorials', url: '/resources/tutorials' },
-    //     { text: 'FAQ', url: '/resources/faq' },
-    //   ],
-    // }
+    const roleSpecificLinks = [...studentLinks, ...instructorLinks, ...adminLinks]
 
-    // Authentication links
-    const authLinks = isLoggedIn
+    const authLinks = isAuthenticated
       ? [
           {
             text: 'Account',
@@ -85,27 +79,75 @@ function App() {
           },
         ]
 
-    // Combine all links, Add if needed: resourcesDropdown,
     setNavLinks([...commonLinks, ...roleSpecificLinks, ...authLinks])
   }, [user])
+
   return (
     <>
       <Header navLinks={navLinks} />
       <Routes>
-        {' '}
+        {/* Public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register/student" element={<RegisterStudentPage />} />{' '}
-        <Route path="/register/instructor" element={<RegisterInstructorPage />} />{' '}
-        <Route path="/logout" element={<LogoutPage />} />
-        <Route path="/password/change" element={<PasswordChangePage />} />
+        <Route path="/register/student" element={<RegisterStudentPage />} />
+        <Route path="/register/instructor" element={<RegisterInstructorPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:uidb64/:token" element={<ResetPasswordConfirmPage />} />
-        <Route path="/lessons" element={<LessonListPage />} />
-        <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
-        <Route path="/exercises/:exerciseId" element={<ExercisePage />} />
+
+        {/* Protected routes - require authentication */}
+        <Route
+          path="/logout"
+          element={
+            <ProtectedRoute>
+              <LogoutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/password/change"
+          element={
+            <ProtectedRoute>
+              <PasswordChangePage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Student & instructor routes */}
+        <Route
+          path="/lessons"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']}>
+              <LessonListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/lessons/:lessonId"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']}>
+              <LessonDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercises/:exerciseId"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']}>
+              <ExercisePage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Instructor/admin only routes */}
+        <Route
+          path="/lessons/create"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <CreateLessonPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
-      <Footer />
     </>
   )
 }

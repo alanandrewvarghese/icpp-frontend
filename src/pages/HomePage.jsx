@@ -14,6 +14,7 @@ import SchoolIcon from '@mui/icons-material/School'
 import GroupIcon from '@mui/icons-material/Group'
 import Divider from '@mui/material/Divider'
 import AuthCheck from '../components/AuthCheck'
+import Footer from '../components/layout/Footer'
 
 const HomePage = () => {
   const unAuthenticatedOptions = (
@@ -199,6 +200,7 @@ const HomePage = () => {
             </Grid>
           </Grid>
         </Container>
+        <Footer />
       </Box>
     </>
   )

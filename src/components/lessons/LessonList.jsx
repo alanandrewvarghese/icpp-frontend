@@ -14,7 +14,19 @@ const LessonList = () => {
       setError(null) // Clear any previous errors
       try {
         const data = await fetchLessons()
-        setLessons(data || []) // Ensure we always have an array
+
+        // Sort lessons by the order property if it exists
+        const sortedLessons = [...(data || [])].sort((a, b) => {
+          // If order property exists, use it for sorting
+          if (a.order !== undefined && b.order !== undefined) {
+            return a.order - b.order
+          }
+
+          // Fallback to sorting by creation date or ID if no order exists
+          return new Date(a.created_at) - new Date(b.created_at)
+        })
+
+        setLessons(sortedLessons)
       } catch (err) {
         setError(err.message || 'Failed to load lessons.')
         console.error('Failed to fetch lessons:', err)
