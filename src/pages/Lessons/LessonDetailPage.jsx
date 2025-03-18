@@ -24,10 +24,20 @@ import LessonNavigation from '../../components/lessons/lessonDetails/LessonNavig
 import LessonProgress from '../../components/lessons/lessonDetails/LessonProgress'
 import MarginTop from '../../components/layout/MarginTop'
 
+// Import markdown utils
+import {
+  getMarkdownStyles,
+  markdownComponents,
+  processMarkdownContent,
+} from '../../utils/markdownUtils'
+
 const LessonDetailPage = () => {
   const { lessonId } = useParams()
   const navigate = useNavigate()
   const theme = useTheme()
+
+  // Get markdown styles using the theme
+  const markdownStyles = getMarkdownStyles(theme)
 
   const [lesson, setLesson] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -127,11 +137,23 @@ const LessonDetailPage = () => {
         </Box>
 
         <TabPanel value={tabValue} index={0}>
-          <ContentTab lesson={lesson} theme={theme} />
+          <ContentTab
+            lesson={lesson}
+            theme={theme}
+            markdownStyles={markdownStyles}
+            markdownComponents={markdownComponents}
+            processMarkdownContent={processMarkdownContent}
+          />
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <ExercisesTab theme={theme} lesson={lesson} />
+          <ExercisesTab
+            theme={theme}
+            lesson={lesson}
+            markdownStyles={markdownStyles}
+            markdownComponents={markdownComponents}
+            processMarkdownContent={processMarkdownContent}
+          />
         </TabPanel>
       </Box>
 

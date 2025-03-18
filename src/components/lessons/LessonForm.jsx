@@ -11,11 +11,12 @@ import {
   Collapse,
   IconButton,
   Divider,
+  Tooltip,
 } from '@mui/material'
-import { Close as CloseIcon } from '@mui/icons-material'
+import { Close as CloseIcon, Info as InfoIcon } from '@mui/icons-material'
 import { createLesson, getMaxLessonOrder } from '../../services/lessonService'
 import { useNavigate } from 'react-router-dom'
-import ContentPreview from './ContentPreview' // Import the new component
+import EscapeCharacterProcessor from '../common/EscapeCharacterProcessor'
 
 const LessonForm = ({ onContentChange, onTitleChange }) => {
   const [title, setTitle] = useState('')
@@ -24,7 +25,6 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
   const [errors, setErrors] = useState({
     title: '',
     description: '',
@@ -137,6 +137,14 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
     // Don't reset nextOrder as it should remain the same
   }
 
+  const handleContentChange = (processedContent) => {
+    setContent(processedContent)
+    if (errors.content && processedContent.trim()) {
+      // Clear content error if content is provided
+      setErrors((prev) => ({ ...prev, content: '' }))
+    }
+  }
+
   return (
     <Paper elevation={3} sx={{ p: 4, borderRadius: 0.5 }}>
       <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 500 }}>
@@ -212,20 +220,17 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
             disabled={loading}
           />
 
-          <TextField
-            fullWidth
-            id="content"
-            label="Content (Markdown Format)"
-            variant="outlined"
-            multiline
-            rows={10}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-            error={!!errors.content}
-            helperText={errors.content || 'Use Markdown formatting for lesson content'}
-            disabled={loading}
-          />
+          <Box>
+            <EscapeCharacterProcessor
+              initialValue={content}
+              onChange={handleContentChange}
+              label="Content (Markdown Format)"
+              rows={10}
+              error={!!errors.content}
+              helperText={errors.content || 'Use Markdown formatting for lesson content'}
+              disabled={loading}
+            />
+          </Box>
 
           {/* Show the position where the lesson will be added */}
           <Typography variant="body2" color="text.secondary">

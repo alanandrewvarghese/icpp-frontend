@@ -9,7 +9,17 @@ const Footer = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <Box component="footer" sx={{ backgroundColor: 'grey.50', borderTop: '1px solid grey.200' }}>
+    <Box
+      component="footer"
+      sx={{
+        backgroundColor: 'grey.50',
+        borderTop: '1px solid grey.200',
+        position: 'fixed',
+        bottom: 0,
+        width: '100%',
+        zIndex: 10,
+      }}
+    >
       <Container maxWidth="xl" sx={{ py: 3, px: 4, sm: { px: 6 }, lg: { px: 8 } }}>
         <Box
           sx={{

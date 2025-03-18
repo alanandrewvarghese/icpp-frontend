@@ -21,10 +21,7 @@ const CreateLessonPage = () => {
   return (
     <AuthCheck allowedRoles={['admin', 'instructor']}>
       <Container maxWidth="xl" sx={{ mb: 6 }}>
-        <MarginTop mt="72px" />
-        <Typography variant="h4" component="h1" gutterBottom>
-          Create New Lesson
-        </Typography>
+        <MarginTop mt="100px" />
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             {/* Left column: Form */}
