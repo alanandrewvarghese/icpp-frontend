@@ -50,7 +50,6 @@ function App() {
     const adminLinks =
       isAuthenticated && hasRole(['admin'])
         ? [
-            { text: 'Create Lesson', url: '/create/lesson' },
             { text: 'Lessons', url: '/lessons' },
             // Admin-specific links
           ]

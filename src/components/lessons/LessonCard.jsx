@@ -25,6 +25,7 @@ import SchoolIcon from '@mui/icons-material/School'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import { useTheme, alpha } from '@mui/material/styles'
 import { deleteLesson } from '../../services/lessonService'
+import toTitleCase from '../../utils/toTitleCase'
 
 const LessonCard = ({ lesson, onLessonDeleted }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -170,6 +171,13 @@ const LessonCard = ({ lesson, onLessonDeleted }) => {
               : lesson.description}
           </Typography>
 
+          {/* Author information */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              Created by: {toTitleCase(lesson.author_name) || 'Unknown'}
+            </Typography>
+          </Box>
+
           {/* Commented out category and duration section */}
         </CardContent>
       </CardActionArea>
@@ -179,7 +187,6 @@ const LessonCard = ({ lesson, onLessonDeleted }) => {
         allowedInstructor="nova"
       >
         <Box position="absolute" top={8} right={8} sx={{ display: 'flex', gap: 1, zIndex: 1 }}>
-          {console.log(lesson)}
           <IconButton
             color="info"
             onClick={handleEditClick}
