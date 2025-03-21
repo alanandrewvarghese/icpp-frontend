@@ -173,9 +173,13 @@ const LessonCard = ({ lesson, onLessonDeleted }) => {
           {/* Commented out category and duration section */}
         </CardContent>
       </CardActionArea>
-
-      <AuthCheck allowedRoles={['admin', 'instructor']}>
+      <AuthCheck
+        allowedRoles={['admin', 'instructor']}
+        createdBy={lesson.author_name}
+        allowedInstructor="nova"
+      >
         <Box position="absolute" top={8} right={8} sx={{ display: 'flex', gap: 1, zIndex: 1 }}>
+          {console.log(lesson)}
           <IconButton
             color="info"
             onClick={handleEditClick}

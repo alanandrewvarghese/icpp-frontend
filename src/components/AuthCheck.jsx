@@ -7,6 +7,8 @@ const AuthCheck = ({
   fallback = null,
   unauthenticatedFallback = null,
   allowedRoles = [],
+  createdBy = null, // Add a new prop to check creator
+  allowedInstructor = null, // Add prop for specific instructor who should have access
 }) => {
   const { user, isLoading } = useContext(AuthContext)
   const [authChecked, setAuthChecked] = useState(false)
@@ -56,13 +58,21 @@ const AuthCheck = ({
   // Check if user has an allowed role (if roles are specified)
   const hasRequiredRole = allowedRoles.length === 0 || allowedRoles.includes(user?.role)
 
+  // Check if user is the creator, an admin, or the specific allowed instructor
+  const isAuthorized =
+    !createdBy ||
+    user?.username === createdBy ||
+    user?.role === 'admin' ||
+    (allowedInstructor && user?.username === allowedInstructor)
+
   // Render unauthenticatedFallback if user is not authenticated
   if (!isAuthenticated) {
     return unauthenticatedFallback
   }
 
-  // Render children if authenticated and has required role, else render fallback
-  return hasRequiredRole ? children : fallback
+  // Render children if authenticated, has required role, and is creator/admin/allowed instructor
+  // Otherwise render fallback
+  return hasRequiredRole && isAuthorized ? children : fallback
 }
 
 export default AuthCheck
