@@ -10,18 +10,25 @@ import {
   Alert,
   Collapse,
   IconButton,
-  Divider,
-  Tooltip,
 } from '@mui/material'
-import { Close as CloseIcon, Info as InfoIcon } from '@mui/icons-material'
-import { createLesson, getMaxLessonOrder } from '../../services/lessonService'
+import { Close as CloseIcon } from '@mui/icons-material'
+import { getMaxLessonOrder } from '../../services/lessonService'
 import { useNavigate } from 'react-router-dom'
 import EscapeCharacterProcessor from '../common/EscapeCharacterProcessor'
 
-const LessonForm = ({ onContentChange, onTitleChange }) => {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [content, setContent] = useState('')
+const LessonForm = ({
+  onContentChange,
+  onTitleChange,
+  onDescriptionChange,
+  onSubmit,
+  initialTitle = '',
+  initialContent = '',
+  initialDescription = '',
+  isEditMode = false,
+}) => {
+  const [title, setTitle] = useState(initialTitle)
+  const [description, setDescription] = useState(initialDescription)
+  const [content, setContent] = useState(initialContent)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -35,20 +42,28 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
   // Order will be determined automatically
   const [nextOrder, setNextOrder] = useState(null)
 
-  // Fetch the next available order value when component mounts
+  // Set initial values when props change
   useEffect(() => {
-    const fetchNextOrder = async () => {
-      try {
-        const maxOrder = await getMaxLessonOrder()
-        setNextOrder(maxOrder + 1)
-      } catch (err) {
-        console.error('Error fetching max lesson order:', err)
-        setNextOrder(1) // Default to 1 if there's an error
-      }
-    }
+    setTitle(initialTitle)
+    setDescription(initialDescription)
+    setContent(initialContent)
+  }, [initialTitle, initialDescription, initialContent])
 
-    fetchNextOrder()
-  }, [])
+  // Only fetch next order for new lessons, not for edits
+  useEffect(() => {
+    if (!isEditMode) {
+      const fetchNextOrder = async () => {
+        try {
+          const maxOrder = await getMaxLessonOrder()
+          setNextOrder(maxOrder + 1)
+        } catch (err) {
+          console.error('Error fetching max lesson order:', err)
+          setNextOrder(1) // Default to 1 if there's an error
+        }
+      }
+      fetchNextOrder()
+    }
+  }, [isEditMode])
 
   // Prompt before leaving with unsaved changes
   useEffect(() => {
@@ -65,19 +80,45 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
     }
   }, [title, description, content])
 
-  // Update parent component when content changes
-  useEffect(() => {
-    if (onContentChange) {
-      onContentChange(content)
+  // Modified handlers to update parent component in real-time
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value
+    setTitle(newTitle)
+    if (onTitleChange) onTitleChange(newTitle) // Update parent immediately
+    if (errors.title && newTitle.trim()) {
+      setErrors((prev) => ({ ...prev, title: '' }))
     }
-  }, [content, onContentChange])
+  }
 
-  // Update parent component when title changes
-  useEffect(() => {
-    if (onTitleChange) {
-      onTitleChange(title)
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value
+    setDescription(newDescription)
+    if (onDescriptionChange) onDescriptionChange(newDescription) // Update parent immediately
+    if (errors.description && newDescription.trim()) {
+      setErrors((prev) => ({ ...prev, description: '' }))
     }
-  }, [title, onTitleChange])
+  }
+
+  const handleContentChange = (processedContent) => {
+    setContent(processedContent)
+    if (onContentChange) onContentChange(processedContent) // Update parent immediately
+    if (errors.content && processedContent.trim()) {
+      setErrors((prev) => ({ ...prev, content: '' }))
+    }
+  }
+
+  // These can be kept for backwards compatibility
+  const handleTitleBlur = () => {
+    if (onTitleChange) onTitleChange(title)
+  }
+
+  const handleDescriptionBlur = () => {
+    if (onDescriptionChange) onDescriptionChange(description)
+  }
+
+  const handleContentBlur = () => {
+    if (onContentChange) onContentChange(content)
+  }
 
   const validateForm = () => {
     const newErrors = {
@@ -92,63 +133,55 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setError('')
-    setSuccessMessage('')
 
     if (!validateForm()) return
 
     setLoading(true)
-
-    const lessonData = {
-      title,
-      description,
-      content,
-      order: nextOrder, // Use the automatically determined order
-    }
+    setError('')
 
     try {
-      const response = await createLesson(lessonData)
-      if (response && response.id) {
-        setSuccessMessage('Lesson created successfully!')
-        // Redirect to lesson list where reordering can happen
-        navigate('/lessons')
-      } else if (response && response.error) {
-        setError(response.error)
-      } else {
-        setError('Failed to create lesson. Please try again.')
+      // All fields are already synced with parent through onChange
+      if (onSubmit) {
+        await onSubmit({
+          title,
+          description,
+          content,
+          order: nextOrder,
+        })
+        setSuccessMessage(
+          isEditMode ? 'Lesson updated successfully!' : 'Lesson created successfully!',
+        )
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again later.')
-      console.error('Lesson creation error:', err)
+      setError(err.message || 'An unexpected error occurred. Please try again later.')
+      console.error('Lesson submission error:', err)
     } finally {
       setLoading(false)
     }
   }
 
   const resetForm = () => {
-    setTitle('')
-    setDescription('')
-    setContent('')
+    // Reset to initial values from props
+    setTitle(initialTitle)
+    setDescription(initialDescription)
+    setContent(initialContent)
+
+    // Also update parent component to keep preview in sync
+    if (onTitleChange) onTitleChange(initialTitle)
+    if (onDescriptionChange) onDescriptionChange(initialDescription)
+    if (onContentChange) onContentChange(initialContent)
+
     setErrors({
       title: '',
       description: '',
       content: '',
     })
-    // Don't reset nextOrder as it should remain the same
-  }
-
-  const handleContentChange = (processedContent) => {
-    setContent(processedContent)
-    if (errors.content && processedContent.trim()) {
-      // Clear content error if content is provided
-      setErrors((prev) => ({ ...prev, content: '' }))
-    }
   }
 
   return (
     <Paper elevation={3} sx={{ p: 4, borderRadius: 0.5 }}>
       <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 500 }}>
-        Add New Lesson
+        {isEditMode ? 'Edit Lesson' : 'Add New Lesson'}
       </Typography>
 
       <Collapse in={!!error}>
@@ -197,7 +230,8 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
             label="Lesson Title"
             variant="outlined"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
+            onBlur={handleTitleBlur}
             required
             error={!!errors.title}
             helperText={errors.title || 'A concise, descriptive title for the lesson'}
@@ -213,7 +247,8 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
             multiline
             rows={3}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleDescriptionChange}
+            onBlur={handleDescriptionBlur}
             required
             error={!!errors.description}
             helperText={errors.description || 'Brief overview of what this lesson covers'}
@@ -224,6 +259,7 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
             <EscapeCharacterProcessor
               initialValue={content}
               onChange={handleContentChange}
+              onBlur={handleContentBlur} // Update parent on blur
               label="Content (Markdown Format)"
               rows={10}
               error={!!errors.content}
@@ -232,23 +268,25 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
             />
           </Box>
 
-          {/* Show the position where the lesson will be added */}
-          <Typography variant="body2" color="text.secondary">
-            This lesson will be added at position #{nextOrder || '...'}
-          </Typography>
+          {/* Only show order for new lessons */}
+          {!isEditMode && (
+            <Typography variant="body2" color="text.secondary">
+              This lesson will be added at position #{nextOrder || '...'}
+            </Typography>
+          )}
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
             <Button
               variant="outlined"
               color="secondary"
               onClick={() => {
-                if (window.confirm('Are you sure you want to clear the form?')) {
+                if (window.confirm('Are you sure you want to reset the form?')) {
                   resetForm()
                 }
               }}
               disabled={loading}
             >
-              Clear Form
+              Reset Form
             </Button>
 
             <Box>
@@ -266,10 +304,16 @@ const LessonForm = ({ onContentChange, onTitleChange }) => {
                 variant="contained"
                 color="primary"
                 size="medium"
-                disabled={loading || nextOrder === null}
+                disabled={loading || (!isEditMode && nextOrder === null)}
                 startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
               >
-                {loading ? 'Creating...' : 'Add Lesson'}
+                {loading
+                  ? isEditMode
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : isEditMode
+                    ? 'Update Lesson'
+                    : 'Add Lesson'}
               </Button>
             </Box>
           </Box>

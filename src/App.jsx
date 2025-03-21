@@ -147,6 +147,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/lessons/edit/:lessonId"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <CreateLessonPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   )

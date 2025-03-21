@@ -40,4 +40,15 @@ const getMaxLessonOrder = async () => {
   }
 }
 
-export { fetchLessons, fetchLesson, createLesson, getMaxLessonOrder }
+const updateLesson = async (lessonId, lessonData) => {
+  try {
+    console.log(lessonId, lessonData)
+    const response = await apiClient.put(`/lessons/lessons/${lessonId}/`, lessonData) // PUT to update lesson
+    return response.data
+  } catch (error) {
+    console.error(`Error updating lesson with ID ${lessonId}:`, error)
+    throw error
+  }
+}
+
+export { fetchLessons, fetchLesson, createLesson, getMaxLessonOrder, updateLesson }
