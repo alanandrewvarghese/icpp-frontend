@@ -51,4 +51,19 @@ const updateLesson = async (lessonId, lessonData) => {
   }
 }
 
-export { fetchLessons, fetchLesson, createLesson, getMaxLessonOrder, updateLesson }
+/**
+ * Delete a lesson by ID
+ * @param {string|number} lessonId - The ID of the lesson to delete
+ * @returns {Promise} - Promise with the deletion result
+ */
+const deleteLesson = async (lessonId) => {
+  try {
+    const response = await apiClient.delete(`/lessons/lessons/${lessonId}/`)
+    return response.data
+  } catch (error) {
+    console.error(`Error deleting lesson with ID ${lessonId}:`, error)
+    throw error
+  }
+}
+
+export { fetchLessons, fetchLesson, createLesson, getMaxLessonOrder, updateLesson, deleteLesson }
