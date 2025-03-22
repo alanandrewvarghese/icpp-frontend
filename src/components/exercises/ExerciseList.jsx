@@ -17,6 +17,8 @@ import {
 import { Code as CodeIcon, KeyboardArrowRight as ArrowIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import toTitleCase from '../../utils/toTitleCase'
+import AuthCheck from '../AuthCheck'
+import AddIcon from '@mui/icons-material/Add'
 
 const ExerciseList = ({ lessonId }) => {
   const [exercises, setExercises] = useState([])
@@ -48,6 +50,21 @@ const ExerciseList = ({ lessonId }) => {
   const handleExerciseClick = (exerciseId) => {
     navigate(`/exercises/${exerciseId}`)
   }
+
+  const renderAddExerciseButton = () => (
+    <AuthCheck allowedRoles={['instructor', 'admin']}>
+      <Box sx={{ mb: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => navigate('/exercises/create')}
+        >
+          Create New Exercise
+        </Button>
+      </Box>
+    </AuthCheck>
+  )
 
   if (!lessonId) {
     return (
@@ -84,69 +101,72 @@ const ExerciseList = ({ lessonId }) => {
   }
 
   return (
-    <List sx={{ width: '100%' }}>
-      {exercises.map((exercise, index) => (
-        <React.Fragment key={exercise.id}>
-          <Paper
-            elevation={0}
-            variant="outlined"
-            sx={{
-              mb: 2,
-              borderRadius: 1,
-              overflow: 'hidden',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              '&:hover': {
-                boxShadow: 2,
-                transform: 'translateY(-2px)',
-              },
-            }}
-          >
-            <ListItem
-              alignItems="flex-start"
-              sx={{ px: 1.5, py: 0.5 }}
-              secondaryAction={
-                <Button
-                  variant="outlined"
-                  size="small"
-                  endIcon={<ArrowIcon />}
-                  onClick={() => handleExerciseClick(exercise.id)}
-                  sx={{ ml: 2 }}
-                >
-                  Start
-                </Button>
-              }
+    <>
+      {renderAddExerciseButton()}
+      <List sx={{ width: '100%' }}>
+        {exercises.map((exercise, index) => (
+          <React.Fragment key={exercise.id}>
+            <Paper
+              elevation={0}
+              variant="outlined"
+              sx={{
+                mb: 2,
+                borderRadius: 1,
+                overflow: 'hidden',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  boxShadow: 2,
+                  transform: 'translateY(-2px)',
+                },
+              }}
             >
-              <Box sx={{ display: 'flex', width: '100%' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mr: 2,
-                    p: 2,
-                    borderRadius: 1,
-                  }}
-                >
-                  <CodeIcon color="primary" />
+              <ListItem
+                alignItems="flex-start"
+                sx={{ px: 1.5, py: 0.5 }}
+                secondaryAction={
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    endIcon={<ArrowIcon />}
+                    onClick={() => handleExerciseClick(exercise.id)}
+                    sx={{ ml: 2 }}
+                  >
+                    Start
+                  </Button>
+                }
+              >
+                <Box sx={{ display: 'flex', width: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mr: 2,
+                      p: 2,
+                      borderRadius: 1,
+                    }}
+                  >
+                    <CodeIcon color="primary" />
+                  </Box>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h6" component="div" sx={{ mb: 0.5 }}>
+                        {exercise.title}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" color="text.secondary">
+                        Author: {toTitleCase(exercise.author_name)}
+                      </Typography>
+                    }
+                  />
                 </Box>
-                <ListItemText
-                  primary={
-                    <Typography variant="h6" component="div" sx={{ mb: 0.5 }}>
-                      {exercise.title}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2" color="text.secondary">
-                      Author: {toTitleCase(exercise.author_name)}
-                    </Typography>
-                  }
-                />
-              </Box>
-            </ListItem>
-          </Paper>
-          {index < exercises.length - 1 && <Box sx={{ mb: 2 }} />}
-        </React.Fragment>
-      ))}
-    </List>
+              </ListItem>
+            </Paper>
+            {index < exercises.length - 1 && <Box sx={{ mb: 2 }} />}
+          </React.Fragment>
+        ))}
+      </List>
+    </>
   )
 }
 

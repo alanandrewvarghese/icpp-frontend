@@ -19,6 +19,8 @@ import LessonListPage from './pages/Lessons/LessonListPage'
 import LessonDetailPage from './pages/Lessons/LessonDetailPage'
 import CreateLessonPage from './pages/Lessons/CreateLessonPage'
 import ExercisePage from './pages/Exercises/ExercisePage'
+import CreateExercisePage from './pages/Exercises/CreateExercisePage'
+import EditExercisePage from './pages/Exercises/EditExercisePage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -42,6 +44,7 @@ function App() {
       isAuthenticated && hasRole(['instructor'])
         ? [
             { text: 'Create Lesson', url: '/lessons/create' },
+            { text: 'Create Exercise', url: '/exercises/create' },
             { text: 'Lessons', url: '/lessons' },
             // Other instructor-specific links
           ]
@@ -151,6 +154,22 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['instructor', 'admin']}>
               <CreateLessonPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercises/create"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <CreateExercisePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exercises/edit/:exerciseId"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <EditExercisePage />
             </ProtectedRoute>
           }
         />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { fetchExercise } from '../../services/exerciseService'
+import { fetchExercise, deleteExercise } from '../../services/exerciseService'
 import {
   Typography,
   CircularProgress,
@@ -13,6 +13,11 @@ import {
   ListItem,
   Grid,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -21,12 +26,20 @@ import InputIcon from '@mui/icons-material/Input'
 import OutputIcon from '@mui/icons-material/Output'
 import ReactMarkdown from 'react-markdown'
 import TestCasesDisplay from './TestCasesDisplay'
+import AuthCheck from '../AuthCheck'
+import Button from '@mui/material/Button'
+import EditIcon from '@mui/icons-material/Edit'
+import { useNavigate } from 'react-router-dom'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const ExerciseDetail = ({ exerciseId }) => {
   const [exercise, setExercise] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteInProgress, setDeleteInProgress] = useState(false)
   const theme = useTheme()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loadExercise = async () => {
@@ -47,6 +60,28 @@ const ExerciseDetail = ({ exerciseId }) => {
       loadExercise()
     }
   }, [exerciseId])
+
+  const handleDeleteClick = () => {
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false)
+  }
+
+  const handleDeleteConfirm = async () => {
+    setDeleteInProgress(true)
+    try {
+      await deleteExercise(exerciseId)
+      setDeleteDialogOpen(false)
+      navigate(`/lessons/${exercise.lesson}`, { replace: true })
+    } catch (err) {
+      setError(err.message || 'Failed to delete exercise.')
+      console.error('Failed to delete exercise:', err)
+    } finally {
+      setDeleteInProgress(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -82,6 +117,28 @@ const ExerciseDetail = ({ exerciseId }) => {
         <Typography variant="h5" component="h2" fontWeight="500">
           {exercise.title}
         </Typography>
+
+        {/* Edit and Delete buttons for instructors/admins */}
+        <AuthCheck allowedRoles={['instructor', 'admin']} createdBy={exercise.author_name}>
+          {console.log(exercise)}
+          <Button
+            sx={{ ml: 2 }}
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => navigate(`/exercises/edit/${exercise.id}`)}
+          >
+            Edit Exercise
+          </Button>
+          <Button
+            sx={{ ml: 1 }}
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDeleteClick}
+          >
+            Delete
+          </Button>
+        </AuthCheck>
       </Box>
 
       <Box sx={{ mb: 3 }}>
@@ -124,6 +181,33 @@ const ExerciseDetail = ({ exerciseId }) => {
         </Typography>
         {renderTestCases()}
       </Box>
+
+      {/* Delete confirmation dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteCancel}
+        aria-labelledby="delete-dialog-title"
+      >
+        <DialogTitle id="delete-dialog-title">Delete Exercise</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this exercise? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel} disabled={deleteInProgress}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            disabled={deleteInProgress}
+            startIcon={deleteInProgress ? <CircularProgress size={20} /> : <DeleteIcon />}
+          >
+            {deleteInProgress ? 'Deleting...' : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   )
 }
