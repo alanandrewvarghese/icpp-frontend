@@ -71,11 +71,9 @@ const CreateLessonPage = () => {
 
   return (
     <AuthCheck allowedRoles={['admin', 'instructor']}>
-      <Container maxWidth="xl" sx={{ mb: 6 }}>
+      <Container maxWidth="xl" sx={{ mb: 6, height: '100%' }}>
         <MarginTop mt="100px" />
-        <Typography variant="h4" gutterBottom>
-          {isEditMode ? 'Edit Lesson' : 'Create Lesson'}
-        </Typography>
+
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             {/* Left column: Form */}

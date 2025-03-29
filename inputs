@@ -1,0 +1,66 @@
+{
+  "title": "Chapter 1: Introduction to Programming and Python",
+  "description": "This chapter introduces the fundamental concepts of programming, why learning to program is valuable, and basic computer architecture. It also provides a first glimpse into the Python programming language and how to interact with it.",
+  "content": "## Why Learn to Write Programs?\n\n- Programming is a creative and rewarding activity.\n- Computers are our \"personal assistants\" and programming allows us to instruct them.\n- Computers excel at repetitive tasks that humans find boring.\n- Learning to program enables you to delegate mundane tasks and focus on creative problem-solving.\n\n**Example:** Counting word frequencies in a text - tedious for humans, easy for computers.\n\n## Creativity and Motivation\n\n- Programming can be a creative outlet.\n- It's about building useful and clever solutions.\n- Initially, you'll be programming for yourself to solve personal data and information challenges.\n- As you improve, you might create programs for others.\n\n## Computer Hardware Architecture\n\nUnderstanding the basic components of a computer is helpful for programming.\n\n- **Central Processing Unit (CPU):** The \"brain\" of the computer, executes instructions rapidly.\n- **Main Memory (RAM):** Fast memory for data the CPU needs immediately. Data is lost when power is off.\n- **Secondary Memory (Storage):** Slower but persistent storage (e.g., hard drives, USB drives). Data remains even when power is off.\n- **Input Devices:**  Ways to get information into the computer (keyboard, mouse, etc.).\n- **Output Devices:** Ways for the computer to communicate results (screen, speaker, etc.).\n- **Network Connection:** Allows communication and data retrieval over a network.\n\nYour role as a programmer is to instruct the CPU using these resources to solve problems.\n\n## Understanding Programming\n\nProgramming involves two key skills:\n\n1. **Knowing the Programming Language (Python):** Vocabulary (reserved words) and grammar (syntax).\n2. **Problem Solving and Storytelling:**  Creating a program (story) to solve a problem (idea).\n\nLearning one programming language makes learning others easier as problem-solving skills are transferable.\n\nWe learn programming by:\n\n- Reading and understanding programs.\n- Writing simple programs and gradually increasing complexity.\n\n## Words and Sentences\n\n- Python's vocabulary is small, consisting of **reserved words** which have specific meanings.\n- You cannot use reserved words for your own variable names.\n\n**Python Reserved Words (example subset):**\n\n```\nand, del, global, not, with, if, for, while, print\n```\n\n- **Sentences** in Python are formed using these words and a specific structure.\n- The `print()` function is a basic Python \"sentence\" to display output.\n\n**Example:**\n```python\nprint('Hello world!')\n```\n\n## Conversing with Python\n\n- To interact with Python, you need to install the Python software.\n- You can use the **Python interpreter** in **interactive mode**.\n- The `>>>` prompt indicates Python is ready for your commands.\n- Type Python code after the prompt and Python will execute it immediately.\n- Be precise with syntax; Python is not intelligent and requires exact commands.\n- To exit interactive mode, type `quit()`.\n\n## Terminology: Interpreter and Compiler\n\n- **High-level languages** (like Python, Java, JavaScript) are easier for humans to read and write.\n- **Machine language** is the low-level language understood by the CPU (binary code).\n- **Translators** are needed to convert high-level languages to machine language.\n\n- **Interpreter:** Reads and executes source code line by line (Python is interpreted).\n    - Allows for interactive sessions.\n- **Compiler:** Translates the entire source code into machine code before execution.\n    - Creates an executable file.\n\n**Variables:**  Used to store and name data in a program.\n\n**Example (Interactive Python):**\n```python\n>>> x = 6\n>>> print(x)\n6\n>>> y = x * 7\n>>> print(y)\n42\n```\n\n## Writing a Program (Script)\n\n- For more complex tasks, write programs in **script files** (text files with `.py` extension).\n- Use a text editor to create and save Python scripts.\n- Execute a script by running the Python interpreter and providing the script's filename.\n\n**Example:** `hello.py`\n```python\nprint('Hello world!')\n```\n\n**Running the script from command line:**\n```bash\npython hello.py\n```\n\n## What is a Program?\n\n- A program is a sequence of Python statements to perform a task.\n- Even simple scripts are programs.\n- Programs are built to solve problems.\n\n**Example Problem:** Finding the most frequent word in text.\n- A Python program can automate this task efficiently.\n\n## The Building Blocks of Programs\n\nFundamental patterns used in programming:\n\n- **Input:** Getting data from the outside world (keyboard, files, sensors).\n- **Output:** Displaying results (screen, files, speakers).\n- **Sequential Execution:** Statements executed in order.\n- **Conditional Execution:** Executing statements based on conditions (if...).\n- **Repeated Execution (Loops):** Repeating statements (for, while).\n- **Reuse (Functions):**  Defining and reusing blocks of code.\n\n## What Could Possibly Go Wrong? (Errors)\n\n- **Syntax Errors:** Violations of Python's grammar. Python will point to the error location.\n- **Logic Errors:** Program runs but produces incorrect results due to flawed logic.\n- **Semantic Errors:** Program is syntactically correct and runs, but doesn't do what you intended due to a misunderstanding of the problem or language.\n\nPython error messages are meant to help you, not to be mean.\n\n## The Learning Journey\n\n- Learning programming takes time and patience, like learning a new language.\n- Don't be discouraged if concepts don't click immediately.\n- Review material, experiment, and take breaks when stuck.\n- \"Ah Hah!\" moments will come as you progress.\n\n## Glossary\n\n- **Bug:** An error in a program.\n- **Central Processing Unit (CPU):** The processor.\n- **Compile:** To translate to machine code all at once.\n- **High-level language:** Human-readable programming language.\n- **Interactive mode:**  Using Python interpreter by typing commands.\n- **Interpret:** To execute code line by line.\n- **Low-level language:** Machine code.\n- **Machine code:** CPU's language (binary).\n- **Main memory:** RAM, fast, volatile memory.\n- **Parse:** To analyze syntactic structure of code.\n- **Portability:** Ability to run on different computers.\n- **Print function:** Displays output on the screen.\n- **Problem solving:** Formulating and solving problems with code.\n- **Program:** Set of instructions for computation.\n- **Prompt:**  Program message asking for user input.\n- **Secondary memory:** Persistent storage (disk, USB).\n- **Semantics:** Meaning of a program.\n- **Semantic error:** Error in meaning/logic.\n- **Source code:** Program in a high-level language.\n\n## Exercises\n\n*(Refer to the original document for exercise questions)*",
+  "order": 1
+}
+  
+  {
+    "lesson": 21,
+    "title": "First Program: Hello, World!",
+    "description": "Write your first Python program! The traditional first program in programming is called 'Hello, World!'. Your task is to write a program that prints the exact text 'Hello, World!' to the console. This exercise introduces you to the basic `print()` function in Python.",
+    "starter_code": "# Write your code here",
+    "solution_code": "print('Hello, World!')",
+    "test_cases": [
+      {
+        "input": "",
+        "expected_output": "Hello, World!",
+        "explanation": "This test case verifies that your program prints the correct greeting message. It's the most basic test to ensure the `print()` function is used correctly with the exact string."
+      }
+    ]
+  }
+
+  {
+    "lesson": 22,
+    "title": "Identify Variable Types",
+    "description": "Determine the data type of different values in Python. Use the `type()` function to check the type of each of the following values and then write a `print()` statement to display the type for each value.\n\n**Values to check:**\n1.  `42`\n2.  `'Hello'`\n3.  `3.14`\n4.  `'-7'`\n5.  `True`",
+    "starter_code": "# Check the type of 42 and print it\n# print(type(...))\n\n# Check the type of 'Hello' and print it\n# print(type(...))\n\n# Check the type of 3.14 and print it\n# print(type(...))\n\n# Check the type of '-7' and print it\n# print(type(...))\n\n# Check the type of True and print it\n# print(type(...))",
+    "solution_code": "print(type(42))\nprint(type('Hello'))\nprint(type(3.14))\nprint(type('-7'))\nprint(type(True))",
+    "test_cases": [
+      {
+        "input": "",
+        "expected_output": "<class 'int'>\n<class 'str'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>",
+        "explanation": "This test case verifies that you correctly identify and print the type for each of the given values. It checks your understanding of integer, string, float, and boolean data types in Python."
+      }
+    ]
+  }
+
+  {
+    "lesson": 22,
+    "title": "Valid and Invalid Variable Names",
+    "description": "Determine which of the following are valid variable names in Python and which are invalid. For each name, write a comment indicating whether it is 'Valid' or 'Invalid' and briefly explain why if it's invalid.\n\n**Variable Names to Check:**\n1.  `my_variable`\n2.  `7variable`\n3.  `variable7`\n4.  `user name`\n5.  `for`\n6.  `_private_var`\n7.  `NumberOfStudents`",
+    "starter_code": "# 1. my_variable\n# ...\n\n# 2. 7variable\n# ...\n\n# 3. variable7\n# ...\n\n# 4. user name\n# ...\n\n# 5. for\n# ...\n\n# 6. _private_var\n# ...\n\n# 7. NumberOfStudents\n# ...",
+    "solution_code": "# 1. my_variable - Valid\n# 2. 7variable - Invalid - Cannot start with a number\n# 3. variable7 - Valid\n# 4. user name - Invalid - Cannot contain spaces\n# 5. for - Invalid - 'for' is a keyword\n# 6. _private_var - Valid\n# 7. NumberOfStudents - Valid",
+    "test_cases": [
+      {
+        "input": "",
+        "expected_output": "# 1. my_variable - Valid\n# 2. 7variable - Invalid - Cannot start with a number\n# 3. variable7 - Valid\n# 4. user name - Invalid - Cannot contain spaces\n# 5. for - Invalid - 'for' is a keyword\n# 6. _private_var - Valid\n# 7. NumberOfStudents - Valid",
+        "explanation": "This test case checks your understanding of Python's rules for naming variables, including restrictions on starting with numbers, using spaces, and using keywords."
+      }
+    ]
+  }
+
+  {
+    "lesson": 22,
+    "title": "Arithmetic Expressions and Order of Operations",
+    "description": "Evaluate the following Python expressions manually, predicting the output. Then, run the code to check if your predictions are correct. Pay attention to the order of operations (PEMDAS/BODMAS).\n\n**Expressions to evaluate:**\n1.  `10 + 2 * 5`\n2.  `(10 + 2) * 5`\n3.  `2 ** 3 + 4`\n4.  `2 ** (3 + 4)`\n5.  `15 / 4`\n6.  `15 // 4`\n7.  `15 % 4`",
+    "starter_code": "# Expression 1: 10 + 2 * 5\n# print(...)\n\n# Expression 2: (10 + 2) * 5\n# print(...)\n\n# Expression 3: 2 ** 3 + 4\n# print(...)\n\n# Expression 4: 2 ** (3 + 4)\n# print(...)\n\n# Expression 5: 15 / 4\n# print(...)\n\n# Expression 6: 15 // 4\n# print(...)\n\n# Expression 7: 15 % 4\n# print(...) ",
+    "solution_code": "print(10 + 2 * 5)\nprint((10 + 2) * 5)\nprint(2 ** 3 + 4)\nprint(2 ** (3 + 4))\nprint(15 / 4)\nprint(15 // 4)\nprint(15 % 4)",
+    "test_cases": [
+      {
+        "input": "",
+        "expected_output": "20\n60\n12\n128\n3.75\n3\n3",
+        "explanation": "This test case verifies your understanding of operator precedence and the behavior of arithmetic operators including addition, multiplication, exponentiation, division, floor division, and modulus."
+      }
+    ]
+  }

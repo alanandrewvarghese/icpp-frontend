@@ -179,8 +179,8 @@ const LessonForm = ({
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 4, borderRadius: 0.5 }}>
-      <Typography variant="h5" sx={{ textAlign: 'center', mb: 3, fontWeight: 500 }}>
+    <Paper elevation={3} sx={{ p: 4, borderRadius: 0.5, minHeight: 'calc(100vh - 120px)' }}>
+      <Typography variant="h5" sx={{ textAlign: 'left', mb: 3, fontWeight: 500 }}>
         {isEditMode ? 'Edit Lesson' : 'Add New Lesson'}
       </Typography>
 

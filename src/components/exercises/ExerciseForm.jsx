@@ -158,17 +158,6 @@ const ExerciseForm = ({
     }
 
     // Validate test cases
-    let hasEmptyTestCase = false
-    testCases.forEach((testCase) => {
-      if (!testCase.expected_output.trim()) {
-        hasEmptyTestCase = true
-      }
-    })
-
-    if (hasEmptyTestCase) {
-      newErrors.testCases = 'All test cases must have an expected output'
-    }
-
     if (testCases.length === 0) {
       newErrors.testCases = 'At least one test case is required'
     }
@@ -483,7 +472,6 @@ const ExerciseForm = ({
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    required
                     label="Expected Output"
                     variant="outlined"
                     multiline
@@ -491,12 +479,7 @@ const ExerciseForm = ({
                     value={testCase.expected_output}
                     onChange={(e) => handleTestCaseChange(index, 'expected_output', e.target.value)}
                     disabled={loading}
-                    error={!testCase.expected_output.trim()}
-                    helperText={
-                      !testCase.expected_output.trim()
-                        ? 'Expected output is required'
-                        : 'Expected output that student code should produce'
-                    }
+                    helperText="Expected output that student code should produce (optional)"
                   />
                 </Grid>
               </Grid>

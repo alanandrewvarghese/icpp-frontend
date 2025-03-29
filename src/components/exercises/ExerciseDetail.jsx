@@ -127,7 +127,7 @@ const ExerciseDetail = ({ exerciseId }) => {
             startIcon={<EditIcon />}
             onClick={() => navigate(`/exercises/edit/${exercise.id}`)}
           >
-            Edit Exercise
+            Edit
           </Button>
           <Button
             sx={{ ml: 1 }}
