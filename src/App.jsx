@@ -21,6 +21,10 @@ import CreateLessonPage from './pages/Lessons/CreateLessonPage'
 import ExercisePage from './pages/Exercises/ExercisePage'
 import CreateExercisePage from './pages/Exercises/CreateExercisePage'
 import EditExercisePage from './pages/Exercises/EditExercisePage'
+import AllExercisesPage from './pages/Exercises/AllExercisesPage'
+
+import UserManagementPage from './pages/Admin/UserManagementPage'
+import AdminDashboardPage from './pages/Admin/AdminDashboardPage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -53,7 +57,10 @@ function App() {
     const adminLinks =
       isAuthenticated && hasRole(['admin'])
         ? [
+            { text: 'Dashboard', url: '/admin/dashboard' },
+            { text: 'Manage User', url: '/admin/users' },
             { text: 'Lessons', url: '/lessons' },
+            { text: 'Exercises', url: '/exercises' },
             // Admin-specific links
           ]
         : []
@@ -139,6 +146,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/exercises"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AllExercisesPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Instructor/admin only routes */}
         <Route
@@ -170,6 +185,22 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['instructor', 'admin']}>
               <EditExercisePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UserManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminDashboardPage />
             </ProtectedRoute>
           }
         />

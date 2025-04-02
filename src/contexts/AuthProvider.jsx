@@ -11,6 +11,7 @@ import {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const storedAccessToken = localStorage.getItem('accessToken')
@@ -33,32 +34,45 @@ export const AuthProvider = ({ children }) => {
       console.log(
         'AuthProvider.jsx - No access token, but refresh token found. Attempting token refresh.',
       )
-      const refreshResponse = await refreshTokenService()
-      if (refreshResponse?.access) {
-        setToken(refreshResponse.access)
+      try {
+        const refreshResponse = await refreshTokenService()
+        if (refreshResponse?.access) {
+          setToken(refreshResponse.access)
 
-        console.log('AuthProvider.jsx - Before localStorage.setItem("accessToken") - Refresh')
-        try {
-          localStorage.setItem('accessToken', refreshResponse.access)
-          console.log(
-            'AuthProvider.jsx - After localStorage.setItem("accessToken") - Refresh - Success',
-          )
-        } catch (e) {
-          console.error('AuthProvider.jsx - Error saving refreshed accessToken to localStorage:', e)
+          console.log('AuthProvider.jsx - Before localStorage.setItem("accessToken") - Refresh')
+          try {
+            localStorage.setItem('accessToken', refreshResponse.access)
+            console.log(
+              'AuthProvider.jsx - After localStorage.setItem("accessToken") - Refresh - Success',
+            )
+          } catch (e) {
+            console.error(
+              'AuthProvider.jsx - Error saving refreshed accessToken to localStorage:',
+              e,
+            )
+          }
+
+          console.log('AuthProvider.jsx - Access token refreshed successfully.')
+        } else {
+          // If refresh fails, clear any stale data
+          clearAuthData()
         }
-
-        console.log('AuthProvider.jsx - Access token refreshed successfully.')
-      } else {
-        // If refresh fails, clear any stale data
+      } catch (error) {
+        console.error('AuthProvider.jsx - Error refreshing token:', error)
         clearAuthData()
+      } finally {
+        setIsLoading(false)
       }
     }
 
     if (storedAccessToken) {
       setToken(storedAccessToken)
       console.log('AuthProvider.jsx - Access token found in localStorage, persisting login state.')
+      setIsLoading(false)
     } else if (storedRefreshToken) {
       refreshAccessToken()
+    } else {
+      setIsLoading(false)
     }
   }, [])
 
@@ -72,57 +86,97 @@ export const AuthProvider = ({ children }) => {
   }
 
   const loginContext = async (username, password) => {
-    const response = await login(username, password)
-    if (response.access) {
-      setUser(response.user)
-      setToken(response.access)
+    try {
+      const response = await login(username, password)
+      if (response.access) {
+        setUser(response.user)
+        setToken(response.access)
 
-      console.log('AuthProvider.jsx - Before localStorage.setItem("accessToken")')
-      try {
-        localStorage.setItem('accessToken', response.access)
-        console.log('AuthProvider.jsx - After localStorage.setItem("accessToken") - Success')
-      } catch (e) {
-        console.error('AuthProvider.jsx - Error saving accessToken to localStorage:', e)
+        console.log('AuthProvider.jsx - Before localStorage.setItem("accessToken")')
+        try {
+          localStorage.setItem('accessToken', response.access)
+          console.log('AuthProvider.jsx - After localStorage.setItem("accessToken") - Success')
+        } catch (e) {
+          console.error('AuthProvider.jsx - Error saving accessToken to localStorage:', e)
+        }
+
+        console.log('AuthProvider.jsx - Before localStorage.setItem("refreshToken")')
+        try {
+          localStorage.setItem('refreshToken', response.refresh)
+          console.log('AuthProvider.jsx - After localStorage.setItem("refreshToken") - Success')
+        } catch (e) {
+          console.error('AuthProvider.jsx - Error saving refreshToken to localStorage:', e)
+        }
+
+        console.log('AuthProvider.jsx - Before localStorage.setItem("user")')
+        try {
+          localStorage.setItem('user', JSON.stringify(response.user))
+          console.log('AuthProvider.jsx - After localStorage.setItem("user") - Success')
+        } catch (e) {
+          console.error('AuthProvider.jsx - Error saving user to localStorage:', e)
+        }
+
+        console.log('AuthProvider.jsx - Login successful, tokens and user data set.')
+      } else {
+        console.log(
+          'AuthProvider.jsx - Login failed (no access token in response data). Response:',
+          response,
+        )
       }
-
-      console.log('AuthProvider.jsx - Before localStorage.setItem("refreshToken")')
-      try {
-        localStorage.setItem('refreshToken', response.refresh)
-        console.log('AuthProvider.jsx - After localStorage.setItem("refreshToken") - Success')
-      } catch (e) {
-        console.error('AuthProvider.jsx - Error saving refreshToken to localStorage:', e)
-      }
-
-      console.log('AuthProvider.jsx - Before localStorage.setItem("user")')
-      try {
-        localStorage.setItem('user', JSON.stringify(response.user))
-        console.log('AuthProvider.jsx - After localStorage.setItem("user") - Success')
-      } catch (e) {
-        console.error('AuthProvider.jsx - Error saving user to localStorage:', e)
-      }
-
-      console.log('AuthProvider.jsx - Login successful, tokens and user data set.')
-    } else {
-      console.log(
-        'AuthProvider.jsx - Login failed (no access token in response data). Response:',
-        response,
-      )
+      return response
+    } catch (error) {
+      console.error('AuthProvider.jsx - Error during login:', error)
+      throw error
     }
-    return response
   }
 
   const registerStudentContext = async (username, password, email) => {
     console.log('AuthProvider.jsx - registerStudentContext called with:', username, email)
-    const response = await registerStudent(username, password, email)
-    console.log('AuthProvider.jsx - Response from registerStudent:', response)
-    return response
+    try {
+      const response = await registerStudent(username, password, email)
+      console.log('AuthProvider.jsx - Response from registerStudent:', response)
+      return response
+    } catch (error) {
+      console.error('AuthProvider.jsx - Error registering student:', error)
+      throw error
+    }
   }
 
   const registerInstructorContext = async (username, password, email) => {
     console.log('AuthProvider.jsx - registerInstructorContext called with:', username, email)
-    const response = await registerInstructor(username, password, email)
-    console.log('AuthProvider.jsx - Response from registerInstructor:', response)
-    return response
+    try {
+      const response = await registerInstructor(username, password, email)
+      console.log('AuthProvider.jsx - Response from registerInstructor:', response)
+      return response
+    } catch (error) {
+      console.error('AuthProvider.jsx - Error registering instructor:', error)
+      throw error
+    }
+  }
+
+  const approveInstructorContext = async (userId) => {
+    console.log('AuthProvider.jsx - approveInstructorContext called for user ID:', userId)
+    try {
+      // This would typically call an API service function similar to the one we defined earlier
+      const response = await fetch(`/api/accounts/approve-instructor/${userId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to approve instructor: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      console.log('AuthProvider.jsx - Response from approveInstructor:', data)
+      return data
+    } catch (error) {
+      console.error('AuthProvider.jsx - Error approving instructor:', error)
+      throw error
+    }
   }
 
   const logoutContext = async () => {
@@ -158,9 +212,11 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         token,
+        isLoading,
         loginContext,
         registerStudentContext,
         registerInstructorContext,
+        approveInstructorContext,
         logoutContext,
       }}
     >
