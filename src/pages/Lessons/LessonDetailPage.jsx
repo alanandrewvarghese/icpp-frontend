@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { fetchLesson } from '../../services/lessonService'
+import { fetchLessonProgress } from '../../services/progressService'
 import {
   Container,
   Box,
@@ -40,6 +41,7 @@ const LessonDetailPage = () => {
   const markdownStyles = getMarkdownStyles(theme)
 
   const [lesson, setLesson] = useState(null)
+  const [progress, setProgress] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [tabValue, setTabValue] = useState(0)
@@ -50,7 +52,9 @@ const LessonDetailPage = () => {
       try {
         setLoading(true)
         const data = await fetchLesson(lessonId)
+        const progressData = await fetchLessonProgress(lessonId)
         setLesson(data)
+        setProgress(progressData)
         // You might want to check if lesson is bookmarked from API or localStorage
         setBookmarked(localStorage.getItem(`bookmark_${lessonId}`) === 'true')
       } catch (err) {
@@ -92,8 +96,16 @@ const LessonDetailPage = () => {
   }
 
   const handleNext = () => {
-    const nextLessonId = parseInt(lessonId, 10) + 1 // Increment the current lesson ID
-    navigate(`/lessons/${nextLessonId}`) // Navigate to the next lesson
+    const nextLessonId = parseInt(lessonId, 10) + 1
+    if (nextLessonId) {
+      navigate(`/lessons/${nextLessonId}`)
+    } else {
+      // If there's no next lesson, show a notification or navigate to the course completion page
+      // For now, we can show an alert
+      alert("You've reached the end of this course!")
+      // Alternatively, you could navigate to the course overview page
+      // navigate(`/courses/${lesson.course_id}`)
+    }
   }
 
   if (loading) {
@@ -126,7 +138,7 @@ const LessonDetailPage = () => {
         theme={theme}
       />
 
-      <LessonProgress value={78} />
+      <LessonProgress value={progress.progress_percentage} />
 
       <Box sx={{ mb: 4 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

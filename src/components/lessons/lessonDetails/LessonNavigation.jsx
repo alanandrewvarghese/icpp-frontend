@@ -8,9 +8,9 @@ const LessonNavigation = ({ handleBack, handleNext }) => {
       <Button variant="outlined" startIcon={<BackIcon />} onClick={handleBack}>
         Back to Lessons
       </Button>
-      <Button variant="contained" endIcon={<NextIcon />} onClick={handleNext}>
+      {/* <Button variant="contained" endIcon={<NextIcon />} onClick={handleNext}>
         Next Lesson
-      </Button>
+      </Button> */}
     </Box>
   )
 }
