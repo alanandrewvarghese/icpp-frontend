@@ -1,4 +1,3 @@
-// src/pages/Lessons/LessonDetailPage.jsx
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { fetchLesson } from '../../services/lessonService'
@@ -15,17 +14,14 @@ import {
 } from '@mui/material'
 import { Book as ReadIcon, Code as CodeIcon, Quiz as QuizIcon } from '@mui/icons-material'
 
-// Import your components
 import TabPanel from '../../components/lessons/lessonDetails/TabPanel'
 import ContentTab from '../../components/lessons/lessonDetails/tabs/ContentTab'
 import ExercisesTab from '../../components/lessons/lessonDetails/tabs/ExercisesTab'
 import LessonHeader from '../../components/lessons/lessonDetails/LessonHeader'
 import LessonBreadcrumbs from '../../components/lessons/lessonDetails/LessonBreadcrumbs'
-import LessonNavigation from '../../components/lessons/lessonDetails/LessonNavigation'
 import LessonProgress from '../../components/lessons/lessonDetails/LessonProgress'
 import MarginTop from '../../components/layout/MarginTop'
 
-// Import markdown utils
 import {
   getMarkdownStyles,
   markdownComponents,
@@ -37,7 +33,6 @@ const LessonDetailPage = () => {
   const navigate = useNavigate()
   const theme = useTheme()
 
-  // Get markdown styles using the theme
   const markdownStyles = getMarkdownStyles(theme)
 
   const [lesson, setLesson] = useState(null)
@@ -45,7 +40,6 @@ const LessonDetailPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [tabValue, setTabValue] = useState(0)
-  const [bookmarked, setBookmarked] = useState(false)
 
   useEffect(() => {
     const getLesson = async () => {
@@ -55,8 +49,6 @@ const LessonDetailPage = () => {
         const progressData = await fetchLessonProgress(lessonId)
         setLesson(data)
         setProgress(progressData)
-        // You might want to check if lesson is bookmarked from API or localStorage
-        setBookmarked(localStorage.getItem(`bookmark_${lessonId}`) === 'true')
       } catch (err) {
         console.error('Error fetching lesson:', err)
         setError('Failed to load lesson. Please try again later.')
@@ -71,11 +63,9 @@ const LessonDetailPage = () => {
   }, [lessonId])
 
   useEffect(() => {
-    // Check if there's a tab query parameter
     const queryParams = new URLSearchParams(window.location.search)
     const tab = queryParams.get('tab')
 
-    // If tab parameter is 'exercises', set the tab value to 1 (Exercises tab)
     if (tab === 'exercises') {
       setTabValue(1)
     }
@@ -83,29 +73,6 @@ const LessonDetailPage = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue)
-  }
-
-  const handleBookmark = () => {
-    const newBookmarkState = !bookmarked
-    setBookmarked(newBookmarkState)
-    localStorage.setItem(`bookmark_${lessonId}`, newBookmarkState)
-  }
-
-  const handleBack = () => {
-    navigate(-1) // Navigate back in history
-  }
-
-  const handleNext = () => {
-    const nextLessonId = parseInt(lessonId, 10) + 1
-    if (nextLessonId) {
-      navigate(`/lessons/${nextLessonId}`)
-    } else {
-      // If there's no next lesson, show a notification or navigate to the course completion page
-      // For now, we can show an alert
-      alert("You've reached the end of this course!")
-      // Alternatively, you could navigate to the course overview page
-      // navigate(`/courses/${lesson.course_id}`)
-    }
   }
 
   if (loading) {
@@ -131,12 +98,7 @@ const LessonDetailPage = () => {
 
       <LessonBreadcrumbs lesson={lesson} />
 
-      <LessonHeader
-        lesson={lesson}
-        bookmarked={bookmarked}
-        handleBookmark={handleBookmark}
-        theme={theme}
-      />
+      <LessonHeader lesson={lesson} theme={theme} />
 
       <LessonProgress value={progress.progress_percentage} />
 
@@ -168,8 +130,6 @@ const LessonDetailPage = () => {
           />
         </TabPanel>
       </Box>
-
-      <LessonNavigation handleBack={handleBack} handleNext={handleNext} />
     </Container>
   )
 }

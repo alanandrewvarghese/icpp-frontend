@@ -21,9 +21,16 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
 import CloseIcon from '@mui/icons-material/Close'
 import MarginTop from '../layout/MarginTop'
 
-const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback }) => {
+const CodeEditor = ({
+  code,
+  onCodeChange,
+  onRun,
+  onSubmit,
+  runningCode,
+  submittingSolution,
+  feedback,
+}) => {
   const [userInput, setUserInput] = useState('')
-  const [runOperation, setRunOperation] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
   const [openFeedback, setOpenFeedback] = useState(false)
 
@@ -42,13 +49,10 @@ const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback 
   }
 
   const handleRunWithInput = () => {
-    setRunOperation(true)
     onRun(userInput)
-    setTimeout(() => setRunOperation(false), 2000)
   }
 
   const handleSubmitSolution = () => {
-    setRunOperation(false)
     onSubmit()
   }
 
@@ -187,18 +191,12 @@ const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback 
                   <Button
                     variant="contained"
                     onClick={handleRunWithInput}
-                    disabled={submitting}
+                    disabled={runningCode || submittingSolution}
                     color="primary"
-                    startIcon={
-                      submitting && runOperation ? (
-                        <CircularProgress size={20} />
-                      ) : (
-                        <PlayArrowIcon />
-                      )
-                    }
+                    startIcon={runningCode ? <CircularProgress size={20} /> : <PlayArrowIcon />}
                     sx={{ minWidth: '120px' }}
                   >
-                    {submitting && runOperation ? 'Running...' : 'Run Code'}
+                    {runningCode ? 'Running...' : 'Run Code'}
                   </Button>
                 </span>
               </Tooltip>
@@ -208,14 +206,12 @@ const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback 
                   <Button
                     variant="outlined"
                     onClick={handleSubmitSolution}
-                    disabled={submitting}
+                    disabled={runningCode || submittingSolution}
                     color="secondary"
-                    endIcon={
-                      submitting && !runOperation ? <CircularProgress size={20} /> : <SendIcon />
-                    }
+                    endIcon={submittingSolution ? <CircularProgress size={20} /> : <SendIcon />}
                     sx={{ minWidth: '160px' }}
                   >
-                    {submitting && !runOperation ? 'Submitting...' : 'Submit Solution'}
+                    {submittingSolution ? 'Submitting...' : 'Submit Solution'}
                   </Button>
                 </span>
               </Tooltip>
@@ -311,14 +307,12 @@ const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback 
                 <Button
                   variant="contained"
                   onClick={handleRunWithInput}
-                  disabled={submitting}
+                  disabled={runningCode || submittingSolution}
                   color="primary"
-                  startIcon={
-                    submitting && runOperation ? <CircularProgress size={20} /> : <PlayArrowIcon />
-                  }
+                  startIcon={runningCode ? <CircularProgress size={20} /> : <PlayArrowIcon />}
                   sx={{ minWidth: '120px' }}
                 >
-                  {submitting && runOperation ? 'Running...' : 'Run Code'}
+                  {runningCode ? 'Running...' : 'Run Code'}
                 </Button>
               </span>
             </Tooltip>
@@ -328,14 +322,12 @@ const CodeEditor = ({ code, onCodeChange, onRun, onSubmit, submitting, feedback 
                 <Button
                   variant="outlined"
                   onClick={handleSubmitSolution}
-                  disabled={submitting}
+                  disabled={runningCode || submittingSolution}
                   color="secondary"
-                  endIcon={
-                    submitting && !runOperation ? <CircularProgress size={20} /> : <SendIcon />
-                  }
+                  endIcon={submittingSolution ? <CircularProgress size={20} /> : <SendIcon />}
                   sx={{ minWidth: '160px' }}
                 >
-                  {submitting && !runOperation ? 'Submitting...' : 'Submit Solution'}
+                  {submittingSolution ? 'Submitting...' : 'Submit Solution'}
                 </Button>
               </span>
             </Tooltip>

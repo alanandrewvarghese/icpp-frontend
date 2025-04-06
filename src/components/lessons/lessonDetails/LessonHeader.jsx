@@ -1,15 +1,10 @@
 import React from 'react'
-import { Paper, Box, Typography, Chip, IconButton } from '@mui/material'
-import {
-  School as SchoolIcon,
-  AccessTime as TimeIcon,
-  Bookmark as BookmarkIcon,
-  BookmarkBorder as BookmarkOutlineIcon,
-} from '@mui/icons-material'
+import { Paper, Box, Typography, Chip } from '@mui/material'
+import { School as SchoolIcon, AccessTime as TimeIcon } from '@mui/icons-material'
 import { alpha } from '@mui/material/styles'
 import toTitleCase from '../../../utils/toTitleCase'
 
-const LessonHeader = ({ lesson, bookmarked, handleBookmark, theme }) => {
+const LessonHeader = ({ lesson, theme }) => {
   return (
     <Paper
       elevation={0}
@@ -62,11 +57,6 @@ const LessonHeader = ({ lesson, bookmarked, handleBookmark, theme }) => {
           <Typography variant="body1" sx={{ mb: 2 }}>
             Author: {toTitleCase(lesson.created_by_name)}
           </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton onClick={handleBookmark} color="primary" sx={{ ml: 1 }}>
-            {bookmarked ? <BookmarkIcon /> : <BookmarkOutlineIcon />}
-          </IconButton>
         </Box>
       </Box>
     </Paper>

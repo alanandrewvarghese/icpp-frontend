@@ -24,12 +24,13 @@ const ExercisePage = () => {
   const [redirectCountdown, setRedirectCountdown] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [testResults, setTestResults] = useState([])
+  const [runningCode, setRunningCode] = useState(false)
+  const [submittingSolution, setSubmittingSolution] = useState(false)
 
   useEffect(() => {
     const loadExercise = async () => {
       try {
         setLoading(true)
-        // Use the correct service function and endpoint
         const exerciseData = await fetchExercise(exerciseId)
         setExercise(exerciseData)
         setCode(exerciseData.starter_code || '')
@@ -41,7 +42,9 @@ const ExercisePage = () => {
       }
     }
 
-    loadExercise()
+    if (exerciseId) {
+      loadExercise()
+    }
   }, [exerciseId])
 
   const handleCodeChange = (value) => {
@@ -50,7 +53,7 @@ const ExercisePage = () => {
 
   const runCode = async (userInput = '') => {
     try {
-      setSubmitting(false)
+      setRunningCode(true) // Use separate state for running
       setFeedback(null)
       setIsOutputError(false)
 
@@ -80,7 +83,7 @@ const ExercisePage = () => {
       setIsOutputError(true)
       setOutput(`Error: ${err.message}`)
     } finally {
-      setSubmitting(false)
+      setRunningCode(false)
     }
   }
 
@@ -105,7 +108,7 @@ const ExercisePage = () => {
 
   const submitSolution = async () => {
     try {
-      setSubmitting(true)
+      setSubmittingSolution(true) // Use separate state for submitting
       const result = await sandboxService.submitSolution(exerciseId, code)
       setFeedback(result)
 
@@ -127,7 +130,7 @@ const ExercisePage = () => {
         message: `Error: ${err.message}`,
       })
     } finally {
-      setSubmitting(false)
+      setSubmittingSolution(false)
     }
   }
 
@@ -222,7 +225,8 @@ const ExercisePage = () => {
                     onCodeChange={handleCodeChange}
                     onRun={runCode}
                     onSubmit={submitSolution}
-                    submitting={submitting}
+                    runningCode={runningCode}
+                    submittingSolution={submittingSolution}
                     feedback={feedback}
                   />
                 </Box>

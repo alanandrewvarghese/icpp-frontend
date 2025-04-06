@@ -9,18 +9,14 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Divider,
-  alpha,
   useTheme,
   Button,
 } from '@mui/material'
 import { Code as CodeIcon, KeyboardArrowRight as ArrowIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import toTitleCase from '../../utils/toTitleCase'
-import AuthCheck from '../AuthCheck'
-import AddIcon from '@mui/icons-material/Add'
 
-const ExerciseList = ({ lessonId }) => {
+const ExerciseList = ({ lessonId, onExerciseSelect }) => {
   const [exercises, setExercises] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -48,23 +44,15 @@ const ExerciseList = ({ lessonId }) => {
   }, [lessonId])
 
   const handleExerciseClick = (exerciseId) => {
-    navigate(`/exercises/${exerciseId}`)
+    // FIX: Check if we're inside a tab view or standalone
+    if (onExerciseSelect) {
+      // We're in a tab view, use the provided callback
+      onExerciseSelect(exerciseId)
+    } else {
+      // We're standalone, navigate directly
+      navigate(`/exercises/${exerciseId}`)
+    }
   }
-
-  const renderAddExerciseButton = () => (
-    <AuthCheck allowedRoles={['instructor', 'admin']}>
-      <Box sx={{ mb: 3 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={() => navigate('/exercises/create')}
-        >
-          Create New Exercise
-        </Button>
-      </Box>
-    </AuthCheck>
-  )
 
   if (!lessonId) {
     return (
@@ -102,7 +90,6 @@ const ExerciseList = ({ lessonId }) => {
 
   return (
     <>
-      {renderAddExerciseButton()}
       <List sx={{ width: '100%' }}>
         {exercises.map((exercise, index) => (
           <React.Fragment key={exercise.id}>
@@ -128,7 +115,10 @@ const ExerciseList = ({ lessonId }) => {
                     variant="outlined"
                     size="small"
                     endIcon={<ArrowIcon />}
-                    onClick={() => handleExerciseClick(exercise.id)}
+                    onClick={() => {
+                      // FIX: Direct navigation instead of using the handler
+                      navigate(`/exercises/${exercise.id}`)
+                    }}
                     sx={{ ml: 2 }}
                   >
                     Start
