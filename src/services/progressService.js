@@ -25,4 +25,14 @@ const fetchUserProgress = async () => {
   }
 }
 
-export { fetchLessonProgress, fetchUserProgress }
+const getUserBadges = async () => {
+  try {
+    const response = await apiClient.get('/badges/users/me/badges/')
+    return response.data
+  } catch (error) {
+    console.error('Error fetching user badges:', error)
+    throw error
+  }
+}
+
+export { fetchLessonProgress, fetchUserProgress, getUserBadges }

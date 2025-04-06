@@ -70,6 +70,12 @@ npm install react-confetti
 npm install @monaco-editor/react@next
 ```
 
+# DATE
+
+```bash
+npm install date-fns
+```
+
 ## Sample Code
 
 ```javascript

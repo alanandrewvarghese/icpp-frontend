@@ -26,6 +26,8 @@ import AllExercisesPage from './pages/Exercises/AllExercisesPage'
 import UserManagementPage from './pages/Admin/UserManagementPage'
 import AdminDashboardPage from './pages/Admin/AdminDashboardPage'
 
+import BadgesPage from './pages/Progress/BadgePage'
+
 function App() {
   const [navLinks, setNavLinks] = useState([])
   const { user } = useContext(AuthContext)
@@ -40,6 +42,8 @@ function App() {
       isAuthenticated && hasRole(['student'])
         ? [
             { text: 'Lessons', url: '/lessons' },
+            { text: 'Badges', url: '/badges' },
+
             // Other student-specific links
           ]
         : []
@@ -201,6 +205,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/badges"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <BadgesPage />
             </ProtectedRoute>
           }
         />
