@@ -27,6 +27,7 @@ import UserManagementPage from './pages/Admin/UserManagementPage'
 import AdminDashboardPage from './pages/Admin/AdminDashboardPage'
 
 import BadgesPage from './pages/Progress/BadgePage'
+import AnalyticsPage from './pages/Admin/AnalyticsPage'
 
 function App() {
   const [navLinks, setNavLinks] = useState([])
@@ -62,6 +63,7 @@ function App() {
       isAuthenticated && hasRole(['admin'])
         ? [
             { text: 'Dashboard', url: '/admin/dashboard' },
+            { text: 'Analytics', url: '/admin/analytics' },
             { text: 'Manage User', url: '/admin/users' },
             { text: 'Lessons', url: '/lessons' },
             { text: 'Exercises', url: '/exercises' },
@@ -213,6 +215,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['student']}>
               <BadgesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/analytics"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AnalyticsPage />
             </ProtectedRoute>
           }
         />
