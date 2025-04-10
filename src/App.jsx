@@ -29,6 +29,12 @@ import AdminDashboardPage from './pages/Admin/AdminDashboardPage'
 import BadgesPage from './pages/Progress/BadgePage'
 import AnalyticsPage from './pages/Admin/AnalyticsPage'
 
+import MyTicketsPage from './pages/Tickets/user/MyTicketsPage'
+import CreateTicketPage from './pages/Tickets/user/CreateTicketPage'
+import TicketDetailPage from './pages/Tickets/user/TicketDetailPage'
+import AdminTicketsPage from './pages/Tickets/admin/AdminTicketsPage'
+import AdminTicketDetailPage from './pages/Tickets/admin/AdminTicketDetailPage'
+
 function App() {
   const [navLinks, setNavLinks] = useState([])
   const { user } = useContext(AuthContext)
@@ -39,12 +45,14 @@ function App() {
 
     const commonLinks = []
 
+    // Support ticket link for all authenticated users
+    const supportLink = isAuthenticated ? [{ text: 'Support', url: '/support/tickets' }] : []
+
     const studentLinks =
       isAuthenticated && hasRole(['student'])
         ? [
             { text: 'Lessons', url: '/lessons' },
             { text: 'Badges', url: '/badges' },
-
             // Other student-specific links
           ]
         : []
@@ -67,11 +75,12 @@ function App() {
             { text: 'Manage User', url: '/admin/users' },
             { text: 'Lessons', url: '/lessons' },
             { text: 'Exercises', url: '/exercises' },
+            { text: 'Support Tickets', url: '/admin/support/tickets' },
             // Admin-specific links
           ]
         : []
 
-    const roleSpecificLinks = [...studentLinks, ...instructorLinks, ...adminLinks]
+    const roleSpecificLinks = [...studentLinks, ...instructorLinks, ...adminLinks, ...supportLink]
 
     const authLinks = isAuthenticated
       ? [
@@ -223,6 +232,50 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AnalyticsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Support Ticket Routes */}
+        <Route
+          path="/support/tickets"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor']}>
+              <MyTicketsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/support/new-ticket"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor']}>
+              <CreateTicketPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/support/tickets/:ticketId"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor']}>
+              <TicketDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Support Ticket Routes */}
+        <Route
+          path="/admin/support/tickets"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminTicketsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/support/tickets/:ticketId"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminTicketDetailPage />
             </ProtectedRoute>
           }
         />
