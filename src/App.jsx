@@ -45,14 +45,12 @@ function App() {
 
     const commonLinks = []
 
-    // Support ticket link for all authenticated users
-    const supportLink = isAuthenticated ? [{ text: 'Support', url: '/support/tickets' }] : []
-
     const studentLinks =
       isAuthenticated && hasRole(['student'])
         ? [
             { text: 'Lessons', url: '/lessons' },
             { text: 'Badges', url: '/badges' },
+            { text: 'Support', url: '/support/tickets' },
             // Other student-specific links
           ]
         : []
@@ -63,6 +61,7 @@ function App() {
             { text: 'Create Lesson', url: '/lessons/create' },
             { text: 'Create Exercise', url: '/exercises/create' },
             { text: 'Lessons', url: '/lessons' },
+            { text: 'Support', url: '/support/tickets' },
             // Other instructor-specific links
           ]
         : []
@@ -80,7 +79,7 @@ function App() {
           ]
         : []
 
-    const roleSpecificLinks = [...studentLinks, ...instructorLinks, ...adminLinks, ...supportLink]
+    const roleSpecificLinks = [...studentLinks, ...instructorLinks, ...adminLinks]
 
     const authLinks = isAuthenticated
       ? [

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Link as RouterLink } from 'react-router-dom'
 import {
   Card,
   CardHeader,
@@ -11,9 +11,12 @@ import {
   Typography,
   Divider,
   Paper,
+  Link,
 } from '@mui/material'
 import ReactMarkdown from 'react-markdown'
 import ticketService from '../../../services/ticketService'
+import { fetchExercise } from '../../../services/exerciseService'
+import { fetchLesson } from '../../../services/lessonService'
 import TicketStatusBadge from '../shared/TicketStatusBadge'
 import TicketTypeChip from '../shared/TicketTypeChip'
 import TicketResponseItem from '../shared/TicketResponseItem'
@@ -31,6 +34,8 @@ const TicketDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [successMessage, setSuccessMessage] = useState(location.state?.message || null)
+  const [relatedExercise, setRelatedExercise] = useState(null)
+  const [relatedLesson, setRelatedLesson] = useState(null)
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -38,6 +43,28 @@ const TicketDetail = () => {
         setLoading(true)
         const data = await ticketService.getTicket(ticketId)
         setTicket(data)
+        console.info('Get Ticket, User TicketDetail', data)
+
+        // Fetch related exercise if exists
+        if (data.related_exercise) {
+          try {
+            const exerciseData = await fetchExercise(data.related_exercise)
+            setRelatedExercise(exerciseData)
+          } catch (err) {
+            console.error(`Failed to fetch related exercise ${data.related_exercise}:`, err)
+          }
+        }
+
+        // Fetch related lesson if exists
+        if (data.related_lesson) {
+          try {
+            const lessonData = await fetchLesson(data.related_lesson)
+            setRelatedLesson(lessonData)
+          } catch (err) {
+            console.error(`Failed to fetch related lesson ${data.related_lesson}:`, err)
+          }
+        }
+
         setError(null)
       } catch (err) {
         console.error(`Failed to fetch ticket ${ticketId}:`, err)
@@ -122,7 +149,18 @@ const TicketDetail = () => {
           {ticket.related_lesson && (
             <Box sx={{ mb: 3 }}>
               <Typography variant="body1">
-                <strong>Related Lesson:</strong> {ticket.related_lesson}
+                <strong>Related Lesson:</strong>{' '}
+                {relatedLesson ? (
+                  <Link
+                    component={RouterLink}
+                    to={`/lessons/${ticket.related_lesson}`}
+                    color="primary"
+                  >
+                    {relatedLesson.title || relatedLesson.name || 'View Lesson'}
+                  </Link>
+                ) : (
+                  <span>Loading lesson details...</span>
+                )}
               </Typography>
             </Box>
           )}
@@ -130,7 +168,18 @@ const TicketDetail = () => {
           {ticket.related_exercise && (
             <Box sx={{ mb: 3 }}>
               <Typography variant="body1">
-                <strong>Related Exercise:</strong> {ticket.related_exercise}
+                <strong>Related Exercise:</strong>{' '}
+                {relatedExercise ? (
+                  <Link
+                    component={RouterLink}
+                    to={`/exercises/${ticket.related_exercise}`}
+                    color="primary"
+                  >
+                    {relatedExercise.title || relatedExercise.name || 'View Exercise'}
+                  </Link>
+                ) : (
+                  <span>Loading exercise details...</span>
+                )}
               </Typography>
             </Box>
           )}
