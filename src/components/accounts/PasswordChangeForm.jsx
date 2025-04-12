@@ -35,16 +35,40 @@ const PasswordChangeForm = () => {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  // Added for better password validation
+  const [newPasswordError, setNewPasswordError] = useState('')
+
+  // Password validator function (from RegistrationForm)
+  const validatePassword = (password) => {
+    // Require minimum 8 chars with at least one lowercase, one uppercase, and one number
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+    return passwordRegex.test(password)
+  }
+
   const handleChange = (e) => {
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
-    if (errors[e.target.name]) {
+
+    // Clear existing errors for this field
+    if (errors[name]) {
       setErrors({
         ...errors,
-        [e.target.name]: '',
+        [name]: '',
       })
+    }
+
+    // Validate new password as user types
+    if (name === 'newPassword') {
+      if (value && !validatePassword(value)) {
+        setNewPasswordError(
+          'Password must be at least 8 characters with at least one lowercase letter, one uppercase letter, and one number',
+        )
+      } else {
+        setNewPasswordError('')
+      }
     }
   }
 
@@ -57,10 +81,9 @@ const PasswordChangeForm = () => {
 
     if (!formData.newPassword) {
       newErrors.newPassword = 'New password is required'
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = 'Password must be at least 8 characters long'
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.newPassword)) {
-      newErrors.newPassword = 'Password must contain lowercase, uppercase and number'
+    } else if (!validatePassword(formData.newPassword)) {
+      newErrors.newPassword =
+        'Password must be at least 8 characters with lowercase, uppercase, and number'
     }
 
     if (!formData.confirmPassword) {
@@ -106,10 +129,12 @@ const PasswordChangeForm = () => {
           newPassword: '',
           confirmPassword: '',
         })
+        setNewPasswordError('') // Clear any password errors
       } else {
         setSubmitResult({
           success: false,
-          message: response?.error || 'Failed to change password. Please try again.',
+          message:
+            'Failed to change password. Check Whether the current Password is correct and new password is not the current Password.',
         })
       }
     } catch (error) {
@@ -208,9 +233,11 @@ const PasswordChangeForm = () => {
               autoComplete="new-password"
               value={formData.newPassword}
               onChange={handleChange}
-              error={Boolean(errors.newPassword)}
+              error={Boolean(errors.newPassword) || Boolean(newPasswordError)}
               helperText={
-                errors.newPassword || 'At least 8 characters with lowercase, uppercase and number'
+                errors.newPassword ||
+                newPasswordError ||
+                'At least 8 characters with lowercase, uppercase and number'
               }
               disabled={isSubmitting}
               InputProps={{
