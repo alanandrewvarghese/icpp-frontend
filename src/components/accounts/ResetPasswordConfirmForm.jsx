@@ -14,6 +14,7 @@ import {
   Stack,
   InputAdornment,
   CircularProgress,
+  Fade,
 } from '@mui/material'
 import {
   LockOutlined as LockOutlinedIcon,
@@ -21,6 +22,15 @@ import {
   VisibilityOff as VisibilityOffIcon,
   Close as CloseIcon,
 } from '@mui/icons-material'
+import { styled } from '@mui/material/styles'
+
+// Add styled component for error messages, matching RegistrationForm
+const ErrorMessage = styled(Fade)(({ theme }) => ({
+  '& span': {
+    color: theme.palette.error.main,
+    fontSize: '0.75rem',
+  },
+}))
 
 const ResetPasswordConfirmForm = () => {
   const { uidb64, token } = useParams() // Extract uidb64 and token from URL
@@ -34,6 +44,37 @@ const ResetPasswordConfirmForm = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
+  // Add password validator function, matching RegistrationForm
+  const validatePassword = (password) => {
+    // Require minimum 8 chars with at least one lowercase, one uppercase, and one number
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+    return passwordRegex.test(password)
+  }
+
+  // Add validation on change handler for password
+  const handlePasswordChange = (e) => {
+    const value = e.target.value
+    setNewPassword(value)
+    if (value && !validatePassword(value)) {
+      setPasswordError(
+        'Password must be at least 8 characters with at least one lowercase letter, one uppercase letter, and one number',
+      )
+    } else {
+      setPasswordError('')
+    }
+  }
+
+  // Add validation on change handler for confirm password
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value
+    setConfirmNewPassword(value)
+    if (newPassword && value && newPassword !== value) {
+      setConfirmPasswordError('Passwords do not match')
+    } else {
+      setConfirmPasswordError('')
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setApiError('')
@@ -43,24 +84,22 @@ const ResetPasswordConfirmForm = () => {
     setLoading(true)
 
     if (!newPassword || !confirmNewPassword) {
-      setPasswordError('Please enter your new password.')
-      setConfirmPasswordError('Please confirm your new password.')
+      setPasswordError(!newPassword ? 'Please enter your new password.' : '')
+      setConfirmPasswordError(!confirmNewPassword ? 'Please confirm your new password.' : '')
       setLoading(false)
       return
     }
 
     if (newPassword !== confirmNewPassword) {
-      setPasswordError('')
       setConfirmPasswordError('Passwords do not match.')
       setLoading(false)
       return
     }
 
-    if (newPassword.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
+    if (!validatePassword(newPassword)) {
       setPasswordError(
-        'Password must be at least 8 characters long and contain lowercase, uppercase, and a number.',
+        'Password must be at least 8 characters with at least one lowercase letter, one uppercase letter, and one number',
       )
-      setConfirmPasswordError('')
       setLoading(false)
       return
     }
@@ -142,10 +181,14 @@ const ResetPasswordConfirmForm = () => {
               variant="outlined"
               type={showPassword ? 'text' : 'password'}
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required
               error={!!passwordError}
-              helperText={passwordError}
+              helperText={
+                <ErrorMessage in={!!passwordError} timeout={300}>
+                  <span>{passwordError}</span>
+                </ErrorMessage>
+              }
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -174,10 +217,14 @@ const ResetPasswordConfirmForm = () => {
               variant="outlined"
               type={showPassword ? 'text' : 'password'}
               value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               required
               error={!!confirmPasswordError}
-              helperText={confirmPasswordError}
+              helperText={
+                <ErrorMessage in={!!confirmPasswordError} timeout={300}>
+                  <span>{confirmPasswordError}</span>
+                </ErrorMessage>
+              }
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

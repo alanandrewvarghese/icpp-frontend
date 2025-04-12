@@ -77,7 +77,7 @@ const HomePage = () => {
           })}
         >
           <Container maxWidth="md">
-            <MarginTop mt="64px" />
+            <MarginTop mt="90px" />
             <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
               Welcome to PyInteract!
             </Typography>
@@ -200,6 +200,8 @@ const HomePage = () => {
             </Grid>
           </Grid>
         </Container>
+        <MarginTop mt="60px" />
+
         <Footer />
       </Box>
     </>
