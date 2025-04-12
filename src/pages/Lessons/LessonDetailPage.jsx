@@ -17,6 +17,7 @@ import { Book as ReadIcon, Code as CodeIcon, Quiz as QuizIcon } from '@mui/icons
 import TabPanel from '../../components/lessons/lessonDetails/TabPanel'
 import ContentTab from '../../components/lessons/lessonDetails/tabs/ContentTab'
 import ExercisesTab from '../../components/lessons/lessonDetails/tabs/ExercisesTab'
+import QuizTab from '../../components/lessons/lessonDetails/tabs/QuizTab'
 import LessonHeader from '../../components/lessons/lessonDetails/LessonHeader'
 import LessonBreadcrumbs from '../../components/lessons/lessonDetails/LessonBreadcrumbs'
 import LessonProgress from '../../components/lessons/lessonDetails/LessonProgress'
@@ -68,6 +69,8 @@ const LessonDetailPage = () => {
 
     if (tab === 'exercises') {
       setTabValue(1)
+    } else if (tab === 'quizzes') {
+      setTabValue(2)
     }
   }, [])
 
@@ -107,6 +110,7 @@ const LessonDetailPage = () => {
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="lesson content tabs">
             <Tab icon={<ReadIcon />} label="Content" />
             <Tab icon={<CodeIcon />} label="Exercises" />
+            <Tab icon={<QuizIcon />} label="Quiz" />
           </Tabs>
         </Box>
 
@@ -128,6 +132,10 @@ const LessonDetailPage = () => {
             markdownComponents={markdownComponents}
             processMarkdownContent={processMarkdownContent}
           />
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          <QuizTab theme={theme} lesson={lesson} />
         </TabPanel>
       </Box>
     </Container>

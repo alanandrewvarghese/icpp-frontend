@@ -1,0 +1,119 @@
+Here's an optimised prompt and a breakdown of how to use it effectively for generating a frontend for your Quiz App API.
+
+Optimised Prompt:
+
+You are a frontend code generator tasked with creating a user interface for a Quiz Application.  Use the following API documentation to understand the available endpoints, data structures, and user roles.
+
+**API Documentation:**
+
+Quiz App API Endpoints
+Quiz Management Endpoints
+1. List All Quizzes
+
+Endpoint: GET /api/quiz/quizzes/
+Permission: Authenticated users (Admins see all, Instructors own)
+[... rest of API documentation as provided ...]
+
+**Based on this API documentation, generate frontend code that includes the following features.  Prioritize user experience and clean, modular code.**
+
+**Core Features:**
+
+* **Quiz Listing & Viewing:**
+    * Display a list of quizzes (for admins, all quizzes; for instructors, only their quizzes; for students, accessible quizzes - if applicable based on your full app logic).
+    * Allow users to view quiz details, including title, description, and questions (without answers).
+    * Implement role-based access:
+        * Admins and Instructors should see "Edit", "Delete", and "Add Question" buttons for each quiz in the list.
+        * Students (if applicable) should see a "Take Quiz" button.
+* **Quiz Creation (Instructors & Admins):**
+    * Create a form to create new quizzes (title, description, passing score, lesson association - if relevant from your backend).
+* **Quiz Editing (Instructors & Admins):**
+    * Forms to edit existing quiz details (title, description, passing score).
+* **Question Management (Instructors & Admins - for specific quizzes):**
+    * Display questions for a selected quiz.
+    * Allow adding new questions to a quiz (question text, order).
+    * Allow editing existing questions (question text, order).
+    * Allow deleting questions.
+* **Choice Management (Instructors & Admins - for specific questions):**
+    * Display choices for a selected question.
+    * Allow adding new choices to a question (choice text, is_correct flag).
+    * Allow editing existing choices (choice text, is_correct flag).
+    * Allow deleting choices.
+* **Taking Quizzes (Students/Authenticated Users):**
+    * Display a quiz in a user-friendly format for taking.
+    * Allow users to select answers for each question.
+    * Implement a "Submit Quiz" button.
+    * Display quiz results after submission (score, pass/fail status, message from API).
+* **Quiz Statistics (Instructors & Admins):**
+    * Display quiz statistics (total attempts, pass rate, average score, unique users) for a selected quiz.
+
+**Technical Requirements & Preferences:**
+
+* **Framework/Library (Choose one or specify "vanilla JS"):** React / Vue.js / Angular / Vanilla JavaScript
+    * **If choosing a framework, specify:**  Use functional components and hooks (React), Composition API (Vue.js), etc. for modern practices.
+* **State Management (if applicable for framework):** Context API (React), Pinia/Vuex (Vue.js), NgRx/RxJS (Angular), or simple component state for smaller apps.
+* **Styling:**  Tailwind CSS / Material UI / Bootstrap /  plain CSS (Specify preference or leave it open for the generator to decide).
+* **Data Fetching:**  Use `fetch` API or `axios` for making API requests.
+* **Authentication:** Assume JWT token-based authentication as described in the API documentation.  Implement a mechanism to include the token in API requests (e.g., using Authorization header).
+* **Error Handling:** Implement basic error handling for API requests (display error messages to the user).
+* **Loading States:** Indicate loading states when fetching data from the API (e.g., loading spinners).
+* **Code Structure:**  Organize code into components (e.g., `QuizList`, `QuizDetails`, `QuestionForm`, `ChoiceForm`, `QuizTakingForm`, `QuizStats`).
+
+**Output Instructions:**
+
+* Provide the code as separate files for components, services (for API calls), and main application entry point.
+* Include clear instructions on how to set up and run the frontend application (e.g., `npm install`, `npm start`).
+* If using a framework, provide `package.json` and any necessary configuration files.
+
+**Important Considerations (For the Code Generator & for you to review):**
+
+* **Permissions:**  Ensure the frontend respects the API permissions. Implement logic to show/hide features based on user roles (Admin, Instructor, Student - you'll need to define how roles are determined in your frontend, likely from user authentication data).
+* **Data Consistency:**  Ensure data displayed in the frontend is consistent with the API responses.
+* **User Friendliness:**  Prioritize a clean and intuitive user interface.
+* **Responsiveness:**  Make the frontend responsive and accessible on different devices.
+
+**Example - if you choose React and Tailwind CSS:**
+
+"Generate React code with Tailwind CSS for the Quiz Application frontend as described above. Use functional components, hooks, Context API for state management, and `fetch` API for data fetching.  Organize components into logical folders. Provide instructions for setup and running."
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+IGNORE_WHEN_COPYING_END
+
+Explanation and Optimisation Breakdown:
+
+Clear Role Definition: "You are a frontend code generator..." - Immediately sets the context for the AI.
+
+Contextual API Documentation: Includes the API documentation directly in the prompt. This is crucial for the AI to understand the backend.
+
+Feature Breakdown: Instead of a general request, the prompt breaks down the frontend into specific, manageable features aligned with the API endpoints. This makes the task clearer for the AI and more controllable for you.
+
+Role-Based Access Emphasis: Explicitly mentions role-based access for different user types (Admin, Instructor, Student), which is critical for this application.
+
+Technical Requirements & Preferences Section: This is where you optimise for specific technologies and coding styles.
+
+Framework Choice: You can choose your preferred framework or opt for vanilla JavaScript. Specifying modern practices within frameworks (hooks, Composition API) improves code quality.
+
+State Management, Styling, Data Fetching: Providing preferences guides the AI to use tools and techniques you are comfortable with or that are suitable for the project.
+
+Authentication, Error Handling, Loading States: These are essential frontend aspects that are often missed in basic prompts. Explicitly requesting them leads to more robust and user-friendly code.
+
+Code Structure: Requesting component-based architecture and file organisation promotes maintainable code.
+
+Output Instructions: Specifies the desired output format (files, instructions), making it easier to use the generated code.
+
+Important Considerations Section: This acts as a reminder to both the AI and yourself about key aspects to review and ensure in the generated frontend. Permissions, data consistency, user experience, and responsiveness are highlighted.
+
+Example with Technology Stack: The example at the end shows how to further refine the prompt by specifying a technology stack (React and Tailwind CSS).
+
+How to Use this Prompt Effectively:
+
+Choose your Technology Stack: Decide on the framework/library, styling approach, etc., based on your project needs and preferences. Update the "Technical Requirements & Preferences" section accordingly.
+
+Refine Features (Optional): If you have more specific UI/UX requirements for each feature, you can add more detail to the "Core Features" section.
+
+Iterate and Refine: Start with a prompt, get the initial output, and then refine the prompt based on the results. If something is missing or not quite right, adjust the prompt and regenerate. For example, if the initial output lacks good styling, you might emphasize styling more in the next prompt iteration.
+
+Review and Adapt: The generated code is a starting point. You will likely need to review, test, and adapt it to fully integrate with your backend and meet all your application's requirements. Pay close attention to the "Important Considerations" section.
+
+By using this optimised and structured prompt, you'll provide the AI with clear guidance, leading to more relevant, functional, and better-quality frontend code for your Quiz App API.

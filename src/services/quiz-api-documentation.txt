@@ -1,0 +1,223 @@
+# Quiz App API Endpoints with CURL Examples
+
+Here's a comprehensive list of the API endpoints in the quiz app along with example CURL requests:
+
+## Quiz Management Endpoints
+
+### 1. List All Quizzes
+```bash
+curl -X GET "http://localhost:8000/api/quiz/quizzes/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+- Notes: Instructors only see their own quizzes
+
+### 2. Get Quiz Details
+```bash
+curl -X GET "http://localhost:8000/api/quiz/quizzes/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 3. Create New Quiz
+```bash
+curl -X POST "http://localhost:8000/api/quiz/quizzes/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "title": "Python Basics",
+    "description": "Test your knowledge of Python fundamentals",
+    "passing_score": 80,
+    "lesson_id": 1
+  }'
+```
+- Notes: Admin or instructor roles only
+
+### 4. Update Quiz
+```bash
+curl -X PUT "http://localhost:8000/api/quiz/quizzes/1/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "title": "Updated Python Basics",
+    "description": "Updated description",
+    "passing_score": 75
+  }'
+```
+- Notes: Admin or instructor roles only
+
+### 5. Delete Quiz
+```bash
+curl -X DELETE "http://localhost:8000/api/quiz/quizzes/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+- Notes: Admin or instructor roles only
+
+### 6. Get Quiz for Specific Lesson
+```bash
+curl -X GET "http://localhost:8000/api/quiz/quizzes/for_lesson/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 7. Bulk Update Quiz Questions and Choices
+```bash
+curl -X POST "http://localhost:8000/api/quiz/quizzes/1/bulk_update/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "questions": [
+      {
+        "id": 1,
+        "text": "What is a variable?",
+        "order": 1,
+        "choices": [
+          {
+            "id": 1,
+            "text": "A container for storing data values",
+            "is_correct": true
+          },
+          {
+            "id": 2,
+            "text": "A mathematical operation",
+            "is_correct": false
+          }
+        ]
+      },
+      {
+        "text": "What does print() do?",
+        "order": 2,
+        "choices": [
+          {
+            "text": "Outputs text to the console",
+            "is_correct": true
+          },
+          {
+            "text": "Prints to a physical printer",
+            "is_correct": false
+          }
+        ]
+      }
+    ]
+  }'
+```
+
+## Question Endpoints
+
+### 8. List All Questions
+```bash
+curl -X GET "http://localhost:8000/api/quiz/questions/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 9. List Questions for a Specific Quiz
+```bash
+curl -X GET "http://localhost:8000/api/quiz/questions/?quiz_id=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 10. Get Question Details
+```bash
+curl -X GET "http://localhost:8000/api/quiz/questions/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 11. Create New Question
+```bash
+curl -X POST "http://localhost:8000/api/quiz/questions/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "text": "What is a list comprehension?",
+    "quiz": 1,
+    "order": 3
+  }'
+```
+
+### 12. Update Question
+```bash
+curl -X PUT "http://localhost:8000/api/quiz/questions/1/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "text": "Updated question text",
+    "order": 2
+  }'
+```
+
+### 13. Delete Question
+```bash
+curl -X DELETE "http://localhost:8000/api/quiz/questions/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Choice Endpoints
+
+### 14. List All Choices
+```bash
+curl -X GET "http://localhost:8000/api/quiz/choices/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 15. List Choices for a Specific Question
+```bash
+curl -X GET "http://localhost:8000/api/quiz/choices/?question_id=1" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 16. Get Choice Details
+```bash
+curl -X GET "http://localhost:8000/api/quiz/choices/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 17. Create New Choice
+```bash
+curl -X POST "http://localhost:8000/api/quiz/choices/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "text": "A way to create lists using a concise syntax",
+    "is_correct": true,
+    "question": 3
+  }'
+```
+
+### 18. Update Choice
+```bash
+curl -X PUT "http://localhost:8000/api/quiz/choices/1/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "text": "Updated choice text",
+    "is_correct": false
+  }'
+```
+
+### 19. Delete Choice
+```bash
+curl -X DELETE "http://localhost:8000/api/quiz/choices/1/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Quiz Attempt Endpoints
+
+### 20. Submit Quiz
+```bash
+curl -X POST "http://localhost:8000/api/quiz/submit/" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "quiz_id": 1,
+    "answers": [
+      {"1": 1},
+      {"2": 4},
+      {"3": 6}
+    ]
+  }'
+```
+- Notes: The format is `{"question_id": choice_id}`
+
+### 21. Get Quiz Statistics
+```bash
+curl -X GET "http://localhost:8000/api/quiz/quizzes/1/stats/" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+- Notes: Admin or instructor roles only; instructors can only view stats for quizzes they created

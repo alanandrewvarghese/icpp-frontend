@@ -23,6 +23,13 @@ import CreateExercisePage from './pages/Exercises/CreateExercisePage'
 import EditExercisePage from './pages/Exercises/EditExercisePage'
 import AllExercisesPage from './pages/Exercises/AllExercisesPage'
 
+// Import Quiz pages
+import ManageQuizzesPage from './pages/Quizzes/ManageQuizzesPage'
+import CreateQuizPage from './pages/Quizzes/CreateQuizPage'
+import EditQuizPage from './pages/Quizzes/EditQuizPage'
+import TakeQuizPage from './pages/Quizzes/TakeQuizPage'
+import QuizStatisticsPage from './pages/Quizzes/QuizStatisticsPage'
+
 import UserManagementPage from './pages/Admin/UserManagementPage'
 import AdminDashboardPage from './pages/Admin/AdminDashboardPage'
 
@@ -60,6 +67,7 @@ function App() {
         ? [
             { text: 'Create Lesson', url: '/lessons/create' },
             { text: 'Create Exercise', url: '/exercises/create' },
+            { text: 'Manage Quizzes', url: '/quizzes/manage' },
             { text: 'Lessons', url: '/lessons' },
             { text: 'Support', url: '/support/tickets' },
             // Other instructor-specific links
@@ -74,6 +82,7 @@ function App() {
             { text: 'Manage User', url: '/admin/users' },
             { text: 'Lessons', url: '/lessons' },
             { text: 'Exercises', url: '/exercises' },
+            { text: 'Quizzes', url: '/quizzes/manage' },
             { text: 'Support Tickets', url: '/admin/support/tickets' },
             // Admin-specific links
           ]
@@ -165,6 +174,48 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AllExercisesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Quiz routes */}
+        <Route
+          path="/quizzes/take/:quizId"
+          element={
+            <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']}>
+              <TakeQuizPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quizzes/manage"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <ManageQuizzesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quizzes/create"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <CreateQuizPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quizzes/edit/:quizId"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <EditQuizPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/quizzes/stats/:quizId"
+          element={
+            <ProtectedRoute allowedRoles={['instructor', 'admin']}>
+              <QuizStatisticsPage />
             </ProtectedRoute>
           }
         />
