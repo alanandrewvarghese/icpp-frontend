@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Typography,
@@ -19,9 +19,12 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import quizService from '../../../services/quizService'
+import { useContext } from 'react'
+import { AuthContext } from '../../../contexts/AuthContext' // Import the AuthContext
 
 const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
   const isEditing = !!question
+  const { user: currentUser } = useContext(AuthContext) // Get current user from context
 
   const [formData, setFormData] = useState({
     text: question ? question.text : '',
@@ -118,12 +121,30 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
     return true
   }
 
+  // Before submitting, verify quiz access
+  const verifyQuizAccess = async () => {
+    try {
+      const quizDetails = await quizService.getQuiz(quizId)
+
+      console.log('Quiz details:', quizDetails)
+      console.log('Quiz creator username:', quizDetails.created_by_username)
+      console.log('Quiz creator ID:', quizDetails.created_by)
+      console.log('Current user:', currentUser)
+
+      // Remove this verification since the backend already handles permissions
+      // Just log information for debugging
+      return true
+    } catch (error) {
+      console.error('Error verifying quiz access:', error)
+      setError(`Error accessing quiz: ${error.message}`)
+      return false
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!validateForm()) {
-      return
-    }
+    if (!validateForm()) return
 
     try {
       setLoading(true)
@@ -133,21 +154,39 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
       // First save the question
       if (isEditing && question && question.id) {
         // Only update if we're in edit mode AND have a valid question ID
-        savedQuestion = await quizService.updateQuestion(question.id, {
+        console.log('Updating question with ID:', question.id)
+        console.log('Update payload:', {
           text: formData.text,
           order: formData.order,
           quiz: quizId,
         })
+
+        try {
+          savedQuestion = await quizService.updateQuestion(question.id, {
+            text: formData.text,
+            order: formData.order,
+            quiz: quizId,
+          })
+        } catch (updateError) {
+          console.error('Error response from update:', updateError.response?.data)
+          throw updateError // Re-throw to be caught by outer catch
+        }
       } else {
-        // Create a new question when:
-        // 1. We're not in edit mode (isEditing is false)
-        // 2. OR we're adding a new question while editing the quiz (isEditing might be true but question.id is missing)
+        // Create a new question
+        console.log('Creating new question with payload:', {
+          text: formData.text,
+          order: formData.order,
+          quiz: quizId,
+        })
+
         savedQuestion = await quizService.createQuestion({
           text: formData.text,
           order: formData.order,
           quiz: quizId,
         })
       }
+
+      console.log('Question saved successfully:', savedQuestion)
 
       // Then handle the choices
       const choicePromises = formData.choices.map(async (choice) => {
@@ -158,6 +197,7 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
 
         if (choice.id) {
           // Update existing choice
+          console.log('Updating choice:', choice.id)
           return quizService.updateChoice(choice.id, {
             text: choice.text,
             is_correct: choice.is_correct,
@@ -165,6 +205,7 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
           })
         } else {
           // Create new choice
+          console.log('Creating new choice for question:', savedQuestion.id)
           return quizService.createChoice({
             text: choice.text,
             is_correct: choice.is_correct,
@@ -173,12 +214,15 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
         }
       })
 
-      await Promise.all(choicePromises)
+      const savedChoices = await Promise.all(choicePromises)
+      console.log('All choices saved:', savedChoices)
 
       onSave(savedQuestion)
     } catch (error) {
       console.error('Error saving question:', error)
-      setError(`Failed to save question: ${error.message || 'Please try again.'}`)
+      setError(
+        `Failed to save question: ${error.response?.data?.error || error.message || 'Please try again.'}`,
+      )
     } finally {
       setLoading(false)
     }

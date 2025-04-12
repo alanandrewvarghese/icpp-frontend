@@ -80,12 +80,12 @@ const QuizStatisticsPage = () => {
         </Box>
 
         <Paper sx={{ p: 3 }}>
-          <Box sx={{ mb: 3 }}>
+          {/* <Box sx={{ mb: 3 }}>
             <Typography variant="body1">{quiz.description}</Typography>
             <Typography variant="subtitle2" sx={{ mt: 2 }}>
               Passing score: {quiz.passing_score}%
             </Typography>
-          </Box>
+          </Box> */}
 
           <QuizProvider>
             <Quiz mode="stats" id={quizId} />
