@@ -121,11 +121,7 @@ const QuizStatistics = ({ quizId }) => {
             Statistics for "{stats.quiz_title}"
           </Typography>
         </Box>
-        <Divider sx={{ mb: 3 }} />
-        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="subtitle1">Your status:</Typography>
-          <CompletionStatus contentType="quiz" contentId={quizId} showToggle />
-        </Box>
+        <Divider sx={{ mb: 4 }} />
 
         {/* Summary Cards */}
         <Grid container spacing={3}>
