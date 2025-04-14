@@ -28,7 +28,7 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
 
   const [formData, setFormData] = useState({
     text: question ? question.text : '',
-    order: question ? question.order : 1,
+    order: question ? question.order : 1, // We'll update this default later
     quiz: quizId,
     choices:
       question && question.choices
@@ -41,6 +41,36 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [loadingNextOrder, setLoadingNextOrder] = useState(!isEditing)
+
+  // Fetch the next order number when creating a new question
+  useEffect(() => {
+    const fetchNextOrder = async () => {
+      if (!isEditing) {
+        try {
+          setLoadingNextOrder(true)
+          // Fetch all questions for this quiz
+          const questions = await quizService.getQuestions(quizId)
+
+          // Calculate the next order number
+          const maxOrder = questions.length > 0 ? Math.max(...questions.map((q) => q.order)) : 0
+
+          // Set the order to be one more than the highest existing order
+          setFormData((prev) => ({
+            ...prev,
+            order: maxOrder + 1,
+          }))
+        } catch (error) {
+          console.error('Error fetching next order number:', error)
+          // Keep default order 1 if there's an error
+        } finally {
+          setLoadingNextOrder(false)
+        }
+      }
+    }
+
+    fetchNextOrder()
+  }, [quizId, isEditing])
 
   const handleQuestionChange = (e) => {
     const { name, value } = e.target
@@ -231,7 +261,7 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
   return (
     <Paper sx={{ p: 3 }} variant="outlined">
       <Typography variant="h5" component="h2" gutterBottom>
-        {isEditing ? 'Edit Question' : 'Add New Question'}
+        {isEditing ? 'Update or Add Question' : 'Add New Question'}
       </Typography>
 
       {error && (
@@ -254,19 +284,12 @@ const QuestionForm = ({ quizId, question = null, onSave, onCancel }) => {
           placeholder="Enter your question here..."
         />
 
-        <TextField
-          label="Display Order"
-          name="order"
-          type="number"
-          value={formData.order}
-          onChange={handleQuestionChange}
-          required
-          InputProps={{
-            inputProps: { min: 1 },
-          }}
-          margin="normal"
-          sx={{ width: '120px' }}
-        />
+        {/* <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+          Question order: {loadingNextOrder ? 'Calculating...' : formData.order}
+          {!isEditing &&
+            !loadingNextOrder &&
+            ' (automatically assigned based on existing questions)'}
+        </Typography> */}
 
         <Box sx={{ mt: 3, mb: 2 }}>
           <Typography variant="h6" gutterBottom>

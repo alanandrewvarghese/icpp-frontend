@@ -81,18 +81,9 @@ const TakeQuizPage = () => {
         </Typography>
       </Box>
 
-      <Paper sx={{ p: 3 }}>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="body1">{quiz.description}</Typography>
-          <Typography variant="subtitle2" sx={{ mt: 2 }}>
-            Passing score: {quiz.passing_score}%
-          </Typography>
-        </Box>
-
-        <QuizProvider>
-          <Quiz mode="take" id={quizId} />
-        </QuizProvider>
-      </Paper>
+      <QuizProvider>
+        <Quiz mode="take" id={quizId} />
+      </QuizProvider>
     </Container>
   )
 }
