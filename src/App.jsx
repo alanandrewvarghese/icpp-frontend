@@ -80,9 +80,7 @@ function App() {
             { text: 'Dashboard', url: '/admin/dashboard' },
             { text: 'Analytics', url: '/admin/analytics' },
             { text: 'Manage User', url: '/admin/users' },
-            { text: 'Lessons', url: '/lessons' },
-            { text: 'Exercises', url: '/exercises' },
-            { text: 'Quizzes', url: '/quizzes/manage' },
+            { text: 'Manage Quizzes', url: '/quizzes/manage' },
             { text: 'Support Tickets', url: '/admin/support/tickets' },
             // Admin-specific links
           ]

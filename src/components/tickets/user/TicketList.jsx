@@ -121,9 +121,9 @@ const TicketList = () => {
             <Typography variant="body1" sx={{ mb: 3 }}>
               No tickets found. Create a new support ticket to get help.
             </Typography>
-            <Button component={Link} to="/support/new-ticket" variant="contained" color="primary">
+            {/* <Button component={Link} to="/support/new-ticket" variant="contained" color="primary">
               Create New Ticket
-            </Button>
+            </Button> */}
           </Box>
         ) : (
           <TableContainer component={Paper} variant="outlined">

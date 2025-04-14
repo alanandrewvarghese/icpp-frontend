@@ -28,6 +28,7 @@ const UserManagementPage = () => {
         </Box>
         <UserList initialTypeFilter={typeFilter} initialStatusFilter={statusFilter} />
       </Container>
+      <MarginTop mt="40px" />
     </AuthCheck>
   )
 }

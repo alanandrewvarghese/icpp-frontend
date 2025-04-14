@@ -48,7 +48,12 @@ const LoginForm = () => {
       console.log('LoginForm.jsx - Response from loginContext:', response)
       if (response?.access) {
         console.log('LoginForm.jsx - Login successful (token received)')
-        navigate('/')
+        console.log(response)
+        if (response.user.role === 'admin') {
+          navigate('/admin/dashboard/')
+        } else {
+          navigate('/')
+        }
       } else {
         setError('Invalid credentials. Please try again.')
         console.log('LoginForm.jsx - Login failed - invalid credentials')

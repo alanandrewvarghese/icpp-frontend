@@ -31,7 +31,7 @@ const LessonHeader = ({ lesson, theme }) => {
                 color: theme.palette.success.dark,
               }}
             />
-            <Chip
+            {/* <Chip
               icon={<TimeIcon />}
               label={lesson.duration || '15 minutes'}
               size="small"
@@ -39,7 +39,7 @@ const LessonHeader = ({ lesson, theme }) => {
                 bgcolor: alpha(theme.palette.info.main, 0.1),
                 color: theme.palette.info.dark,
               }}
-            />
+            /> */}
             {lesson.difficulty && (
               <Chip
                 label={lesson.difficulty}

@@ -6,7 +6,7 @@ const LessonProgress = ({ value = 25 }) => {
     <Box sx={{ mt: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
         <Typography variant="caption" color="text.secondary">
-          Progress
+          Exercise Progress
         </Typography>
         <Typography variant="caption" color="text.secondary">
           {value}%
