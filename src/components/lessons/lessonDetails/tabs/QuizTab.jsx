@@ -6,6 +6,7 @@ import AuthCheck from '../../../AuthCheck'
 import { QuizProvider } from '../../../quiz/context/QuizContext'
 import quizService from '../../../../services/quizService'
 import Quiz from '../../../quiz/Quiz'
+import CompletionStatus from '../../../common/CompletionStatus'
 
 const QuizTab = ({ lesson, theme }) => {
   const [quiz, setQuiz] = useState(null)
@@ -123,6 +124,9 @@ const QuizTab = ({ lesson, theme }) => {
               }}
             >
               <Typography variant="h6">{quiz.title}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <CompletionStatus contentType="quiz" contentId={quiz.id} />
+              </Box>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 {quiz.description}
               </Typography>

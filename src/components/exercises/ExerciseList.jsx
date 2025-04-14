@@ -15,6 +15,7 @@ import {
 import { Code as CodeIcon, KeyboardArrowRight as ArrowIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import toTitleCase from '../../utils/toTitleCase'
+import CompletionStatus from '../common/CompletionStatus'
 
 const ExerciseList = ({ lessonId, onExerciseSelect }) => {
   const [exercises, setExercises] = useState([])
@@ -111,18 +112,19 @@ const ExerciseList = ({ lessonId, onExerciseSelect }) => {
                 alignItems="flex-start"
                 sx={{ px: 1.5, py: 0.5 }}
                 secondaryAction={
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    endIcon={<ArrowIcon />}
-                    onClick={() => {
-                      // FIX: Direct navigation instead of using the handler
-                      navigate(`/exercises/${exercise.id}`)
-                    }}
-                    sx={{ ml: 2 }}
-                  >
-                    Start
-                  </Button>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <CompletionStatus contentType="exercise" contentId={exercise.id} size="small" />
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      endIcon={<ArrowIcon />}
+                      onClick={() => {
+                        navigate(`/exercises/${exercise.id}`)
+                      }}
+                    >
+                      Start
+                    </Button>
+                  </Box>
                 }
               >
                 <Box sx={{ display: 'flex', width: '100%' }}>

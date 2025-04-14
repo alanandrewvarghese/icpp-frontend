@@ -27,6 +27,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useQuiz, QUIZ_ACTIONS } from '../context/QuizContext'
 import quizService from '../../../services/quizService'
 import { useNavigate } from 'react-router-dom'
+import statusService from '../../../services/statusService'
 
 const QuizTaking = ({ quizId }) => {
   const { state, dispatch } = useQuiz()
@@ -81,6 +82,15 @@ const QuizTaking = ({ quizId }) => {
 
       const submissionResult = await quizService.submitQuiz(quizId, formattedAnswers)
       setResult(submissionResult)
+
+      try {
+        // If the quiz is passed, mark it as completed
+        if (submissionResult.passed) {
+          await statusService.updateContentStatus('quiz', quizId, true)
+        }
+      } catch (error) {
+        console.error('Error updating quiz completion status:', error)
+      }
     } catch (error) {
       dispatch({ type: QUIZ_ACTIONS.SET_ERROR, payload: error.message })
     } finally {

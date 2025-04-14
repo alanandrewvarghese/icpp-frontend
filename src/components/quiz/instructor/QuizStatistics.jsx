@@ -21,6 +21,7 @@ import {
 } from '@mui/icons-material'
 
 import quizService from '../../../services/quizService'
+import CompletionStatus from '../../common/CompletionStatus'
 
 // Custom circular progress with percentage
 const CircularProgressWithLabel = ({ value, color, size = 80, thickness = 5 }) => {
@@ -121,6 +122,10 @@ const QuizStatistics = ({ quizId }) => {
           </Typography>
         </Box>
         <Divider sx={{ mb: 3 }} />
+        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="subtitle1">Your status:</Typography>
+          <CompletionStatus contentType="quiz" contentId={quizId} showToggle />
+        </Box>
 
         {/* Summary Cards */}
         <Grid container spacing={3}>
